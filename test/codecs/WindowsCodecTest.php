@@ -15,54 +15,36 @@
  * @created 2009
  */
 
-require_once dirname(__FILE__).'/../../src/ESAPI.php';
-require_once dirname(__FILE__).'/../../src/codecs/WindowsCodec.php';
-
-
 class WindowsCodecTest extends PHPUnit_Framework_TestCase
 {
-	private $windowsCodec = null;
-	
-	function setUp()
-	{
-		global $ESAPI;
+    private $windowsCodec;
+    
+    protected function setUp()
+    {
+        $this->windowsCodec = new WindowsCodec();
+    }
 
-		if ( !isset($ESAPI))
-		{
-			$ESAPI = new ESAPI();
-		}
-
-		$this->windowsCodec = new WindowsCodec();
-	}
-
-	function tearDown()
-	{
-
-	}
-	
-	function testEncode()
-	{
-		$immune = array("");
-		
-		$this->assertEquals( '^"^ ^&^ dir^/s^ c^:', $this->windowsCodec->encode($immune, '" & dir/s c:') );
-	}
-	
-	function testEncodeCharacter()
-	{
-		$immune = array("");
-		
-		$this->assertEquals( "^<", $this->windowsCodec->encode($immune, "<") );
-	}	
-	
-	function testDecode()
-	{
-		$this->assertEquals( '" & dir/s c:', $this->windowsCodec->decode('^"^ ^&^ dir^/s^ c^:') );
-	}
-		
-	function testDecodeCharacter()
-	{
-		$this->assertEquals( "<", $this->windowsCodec->decode("^<") );
-	}
-	
+    public function testEncode()
+    {
+        $immune = array();
+        
+        $this->assertEquals('^"^ ^&^ dir^/s^ c^:', $this->windowsCodec->encode($immune, '" & dir/s c:'));
+    }
+    
+    public function testEncodeCharacter()
+    {
+        $immune = array();
+        
+        $this->assertEquals("^<", $this->windowsCodec->encode($immune, "<"));
+    }
+    
+    public function testDecode()
+    {
+        $this->assertEquals('" & dir/s c:', $this->windowsCodec->decode('^"^ ^&^ dir^/s^ c^:'));
+    }
+        
+    public function testDecodeCharacter()
+    {
+        $this->assertEquals("<", $this->windowsCodec->decode("^<"));
+    }
 }
-?>

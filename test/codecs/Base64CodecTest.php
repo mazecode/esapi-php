@@ -15,43 +15,32 @@
  * @created 2009
  */
 
-require_once dirname(__FILE__).'/../../src/ESAPI.php';
-require_once dirname(__FILE__).'/../../src/codecs/Base64Codec.php';
-
 class Base64CodecTest extends PHPUnit_Framework_TestCase
 {
-	private $base64Codec = null;
-	
-	function setUp()
-	{
-		global $ESAPI;
-
-		if ( !isset($ESAPI))
-		{
-			$ESAPI = new ESAPI();
-		}
-		
-		$this->base64Codec = new Base64Codec();
-	}
-		
-	function testEncode()
-	{
-		$this->assertEquals('Ij48c2NyaXB0PmFsZXJ0KC9YU1MvKTwvc2NyaXB0Pjxmb28gYXR0cj0i', $this->base64Codec->encode('"><script>alert(/XSS/)</script><foo attr="') );
-	}
-	
-	function testEncodeCharacter()
-	{
-		$this->assertEquals( "PA==", $this->base64Codec->encode("<") );
-	}	
-	
-	function testDecode()
-	{
-		$this->assertEquals('"><script>alert(/XSS/)</script><foo attr="', $this->base64Codec->decode('Ij48c2NyaXB0PmFsZXJ0KC9YU1MvKTwvc2NyaXB0Pjxmb28gYXR0cj0i') );
-	}
-		
-	function testDecodeCharacter()
-	{
-		$this->assertEquals( "<", $this->base64Codec->decode("PA==") );
-	}
+    private $base64Codec;
+    
+    protected function setUp()
+    {
+        $this->base64Codec = new Base64Codec();
+    }
+        
+    public function testEncode()
+    {
+        $this->assertEquals('Ij48c2NyaXB0PmFsZXJ0KC9YU1MvKTwvc2NyaXB0Pjxmb28gYXR0cj0i', $this->base64Codec->encode('"><script>alert(/XSS/)</script><foo attr="'));
+    }
+    
+    public function testEncodeCharacter()
+    {
+        $this->assertEquals("PA==", $this->base64Codec->encode("<"));
+    }
+    
+    public function testDecode()
+    {
+        $this->assertEquals('"><script>alert(/XSS/)</script><foo attr="', $this->base64Codec->decode('Ij48c2NyaXB0PmFsZXJ0KC9YU1MvKTwvc2NyaXB0Pjxmb28gYXR0cj0i'));
+    }
+        
+    public function testDecodeCharacter()
+    {
+        $this->assertEquals("<", $this->base64Codec->decode("PA=="));
+    }
 }
-?>

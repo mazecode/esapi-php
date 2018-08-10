@@ -23,9 +23,8 @@
 
 error_reporting(E_ALL | ~E_STRICT);
 
-require_once dirname(__FILE__).'/../src/ESAPI.php';
-$ESAPI = new ESAPI(dirname(__FILE__)."/testresources/ESAPI.xml");
+require_once __DIR__ . '/../vendor/autoload.php';
 
-session_start(); // For HTTPUtilities
+ESAPI::getSecurityConfiguration(__DIR__ . '/testresources/ESAPI.xml');
 
-?>
+session_start(); // For HTTPUtilities;

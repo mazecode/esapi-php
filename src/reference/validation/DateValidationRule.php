@@ -1,6 +1,6 @@
 <?php
 /**
- * OWASP Enterprise Security API (ESAPI)
+ * OWASP Enterprise Security API (ESAPI).
  *
  * This file is part of the Open Web Application Security Project (OWASP)
  * Enterprise Security API (ESAPI) project.
@@ -12,22 +12,19 @@
  * software.
  *
  * @category  OWASP
+ *
  * @package   ESAPI_Reference_Validation
+ *
  * @author    Jeff Williams <jeff.williams@aspectsecurity.com>
  * @author    Johannes B. Ullrich <jullrich@sans.edu>
  * @author    jah <jah@jahboite.co.uk>
  * @copyright 2009-2010 The OWASP Foundation
  * @license   http://www.opensource.org/licenses/bsd-license.php New BSD license
+ *
  * @version   SVN: $Id$
+ *
  * @link      http://www.owasp.org/index.php/ESAPI
  */
-
-
-/**
- * DateValidationRule requires the BaseValidationRule.
- */
-require_once dirname(__FILE__) . '/BaseValidationRule.php';
-
 
 /**
  * DateValidationRule implementation of the ValidationRule interface.
@@ -35,19 +32,23 @@ require_once dirname(__FILE__) . '/BaseValidationRule.php';
  * PHP version 5.2.9
  *
  * @category  OWASP
+ *
  * @package   ESAPI_Reference_Validation
+ *
  * @author    Jeff Williams <jeff.williams@aspectsecurity.com>
  * @author    Johannes B. Ullrich <jullrich@sans.edu>
  * @author    jah <jah@jahboite.co.uk>
  * @copyright 2009-2010 The OWASP Foundation
  * @license   http://www.opensource.org/licenses/bsd-license.php New BSD license
+ *
  * @version   Release: @package_version@
+ *
  * @link      http://www.owasp.org/index.php/ESAPI
  */
 class DateValidationRule extends BaseValidationRule
 {
-    private $_format;
 
+    private $_format;
 
     /**
      * Constructor sets-up the validation rule with a descriptive name for this
@@ -58,8 +59,6 @@ class DateValidationRule extends BaseValidationRule
      * @param string  $typeName  A descriptive name for this validator.
      * @param Encoder $encoder   Encoder object providing canonicalize method.
      * @param string  $newFormat Date format string {@see date()}.
-     *
-     * @return null
      */
     public function __construct($typeName, $encoder = null, $newFormat = null)
     {
@@ -71,26 +70,22 @@ class DateValidationRule extends BaseValidationRule
         $this->setDateFormat($newFormat);
     }
 
-
     /**
      * Sets the date format string which valid inputs must adhere to. The format
      * should be of the type accepted by PHP's date() function e.g. 'Y-m-d'.
      *
      * @param string $newFormat Date format string {@see date()}.
-     *
-     * @return null
      */
     public function setDateFormat($newFormat)
     {
         if (! is_string($newFormat) || $newFormat == '') {
             throw new RuntimeException(
-                'setDateFormat requires a non-empty string DateFormat as '.
+                'setDateFormat requires a non-empty string DateFormat as ' .
                 'accepted by date().'
             );
         }
         $this->_format = $newFormat;
     }
-
 
     /**
      * Returns the canonicalized, valid input.
@@ -103,9 +98,9 @@ class DateValidationRule extends BaseValidationRule
      *                        with respect to the value passed in.
      * @param string $input   The actual string user input data to validate.
      *
-     * @return DateTime DateTime object parsed from canonicalized, valid input.
-     *
      * @throws ValidationException, IntrusionException
+     *
+     * @return DateTime DateTime object parsed from canonicalized, valid input.
      */
     public function getValid($context, $input)
     {
@@ -134,15 +129,12 @@ class DateValidationRule extends BaseValidationRule
 
         // strict canonicalization
         $canonical = null;
-        try
-        {
+        try {
             $canonical = $this->encoder->canonicalize($input, true);
-        }
-        catch (EncodingException $e)
-        {
+        } catch (EncodingException $e) {
             throw new ValidationException(
                 "{$context} -  Invalid input. Encoding problem detected.",
-                'An EncodingException was thrown during canonicalization of '.
+                'An EncodingException was thrown during canonicalization of ' .
                 'the input.',
                 $context
             );
@@ -176,7 +168,6 @@ class DateValidationRule extends BaseValidationRule
         return $date;
     }
 
-
     /**
      * Returns a default DateTime object created by calling date_create without
      * supplying any parameters.
@@ -194,6 +185,4 @@ class DateValidationRule extends BaseValidationRule
     {
         return date_create();
     }
-
-
 }

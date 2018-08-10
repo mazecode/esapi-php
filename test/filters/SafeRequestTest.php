@@ -20,13 +20,9 @@
  * @link      http://www.owasp.org/index.php/ESAPI
  */
 
-
 /**
  * Require ESAPI and SafeRequest.
  */
-require_once dirname(__FILE__) . '/../../src/ESAPI.php';
-require_once dirname(__FILE__) . '/../../src/filters/SafeRequest.php';
-
 
 /**
  * UnitTestCase for SafeRequest implementation.
@@ -47,25 +43,11 @@ require_once dirname(__FILE__) . '/../../src/filters/SafeRequest.php';
 class SafeRequestTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * Ensures ESAPI is initialised.
-     * 
-     * @return null
-     */
-    function __construct()
-    {
-        global $ESAPI;
-        if (!isset($ESAPI)) {
-            $ESAPI = new ESAPI(dirname(__FILE__) . '/../../testresources/ESAPI.xml');
-        }
-    }
-
-
-    /**
      * Test of SafeRequest::getAuthType() with null input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetAuthTypeInputNull()
+    public function testGetAuthTypeInputNull()
     {
         $req = new SafeRequest(
             array(
@@ -78,13 +60,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('', $result);
     }
 
-
     /**
      * Test of SafeRequest::getAuthType() with invalid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetAuthTypeInputInvalid()
+    public function testGetAuthTypeInputInvalid()
     {
         $req = new SafeRequest(
             array(
@@ -98,13 +79,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('', $result);
     }
 
-
     /**
      * Test of SafeRequest::getAuthType() with valid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetAuthTypeInputValid()
+    public function testGetAuthTypeInputValid()
     {
         $req = new SafeRequest(
             array(
@@ -118,13 +98,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('bAsic', $result);
     }
 
-
     /**
      * Test of SafeRequest::getContentLength() with null input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetContentLengthInputNull()
+    public function testGetContentLengthInputNull()
     {
         $req = new SafeRequest(
             array(
@@ -137,13 +116,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(0, $result);
     }
 
-
     /**
      * Test of SafeRequest::getContentLength() with invalid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetContentLengthInputInvalid()
+    public function testGetContentLengthInputInvalid()
     {
         $req = new SafeRequest(
             array(
@@ -157,13 +135,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(0, $result);
     }
 
-
     /**
      * Test of SafeRequest::getContentLength() with valid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetContentLengthInputValid()
+    public function testGetContentLengthInputValid()
     {
         $req = new SafeRequest(
             array(
@@ -177,13 +154,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1024, $result);
     }
 
-
     /**
      * Test of SafeRequest::getContentType() with null input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetContentTypeInputNull()
+    public function testGetContentTypeInputNull()
     {
         $req = new SafeRequest(
             array(
@@ -196,13 +172,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('', $result);
     }
 
-
     /**
      * Test of SafeRequest::getContentType() with invalid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetContentTypeInputInvalid()
+    public function testGetContentTypeInputInvalid()
     {
         $req = new SafeRequest(
             array(
@@ -216,13 +191,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('', $result);
     }
 
-
     /**
      * Test of SafeRequest::getContentType() with valid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetContentTypeInputValid()
+    public function testGetContentTypeInputValid()
     {
         $req = new SafeRequest(
             array(
@@ -236,13 +210,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('application/url-form-encoded', $result);
     }
 
-
     /**
      * Test of SafeRequest::getPathInfo() with null input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetPathInfoInputNull()
+    public function testGetPathInfoInputNull()
     {
         $req = new SafeRequest(
             array(
@@ -255,13 +228,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('', $result);
     }
 
-
     /**
      * Test of SafeRequest::getPathInfo() with invalid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetPathInfoInputInvalid()
+    public function testGetPathInfoInputInvalid()
     {
         $req = new SafeRequest(
             array(
@@ -275,13 +247,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('', $result);
     }
 
-
     /**
      * Test of SafeRequest::getPathInfo() with valid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetPathInfoInputValid()
+    public function testGetPathInfoInputValid()
     {
         $req = new SafeRequest(
             array(
@@ -295,13 +266,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('/foo', $result);
     }
 
-
     /**
      * Test of SafeRequest::getPathTranslated() with null input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetPathTranslatedInputNull()
+    public function testGetPathTranslatedInputNull()
     {
         $req = new SafeRequest(
             array(
@@ -314,13 +284,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('', $result);
     }
 
-
     /**
      * Test of SafeRequest::getPathTranslated() with invalid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetPathTranslatedInputInvalid()
+    public function testGetPathTranslatedInputInvalid()
     {
         $req = new SafeRequest(
             array(
@@ -334,13 +303,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('', $result);
     }
 
-
     /**
      * Test of SafeRequest::getPathTranslated() with valid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetPathTranslatedInputValid()
+    public function testGetPathTranslatedInputValid()
     {
         $req = new SafeRequest(
             array(
@@ -354,13 +322,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('/foo', $result);
     }
 
-
     /**
      * Test of SafeRequest::getQueryString() with null input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetQueryStringInputNull()
+    public function testGetQueryStringInputNull()
     {
         $req = new SafeRequest(
             array(
@@ -373,13 +340,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('', $result);
     }
 
-
     /**
      * Test of SafeRequest::getQueryString() with invalid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetQueryStringInputInvalid()
+    public function testGetQueryStringInputInvalid()
     {
         $req = new SafeRequest(
             array(
@@ -393,13 +359,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('', $result);
     }
 
-
     /**
      * Test of SafeRequest::getQueryString() with valid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetQueryStringInputValid()
+    public function testGetQueryStringInputValid()
     {
         $req = new SafeRequest(
             array(
@@ -413,13 +378,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('foo=bar', $result);
     }
 
-
     /**
      * Test of SafeRequest::getRemoteAddr() with null input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetRemoteAddrInputNull()
+    public function testGetRemoteAddrInputNull()
     {
         $req = new SafeRequest(
             array(
@@ -432,13 +396,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('', $result);
     }
 
-
     /**
      * Test of SafeRequest::getRemoteAddr() with invalid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetRemoteAddrInputInvalid()
+    public function testGetRemoteAddrInputInvalid()
     {
         $req = new SafeRequest(
             array(
@@ -452,13 +415,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('', $result);
     }
 
-
     /**
      * Test of SafeRequest::getRemoteAddr() with valid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetRemoteAddrInputValid()
+    public function testGetRemoteAddrInputValid()
     {
         $req = new SafeRequest(
             array(
@@ -472,13 +434,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('123.45.67.89', $result);
     }
 
-
     /**
      * Test of SafeRequest::getRemoteHost() with null input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetRemoteHostInputNull()
+    public function testGetRemoteHostInputNull()
     {
         $req = new SafeRequest(
             array(
@@ -491,13 +452,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('', $result);
     }
 
-
     /**
      * Test of SafeRequest::getRemoteHost() with invalid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetRemoteHostInputInvalid()
+    public function testGetRemoteHostInputInvalid()
     {
         $req = new SafeRequest(
             array(
@@ -533,13 +493,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('', $result);
     }
 
-
     /**
      * Test of SafeRequest::getRemoteHost() with valid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetRemoteHostInputValid()
+    public function testGetRemoteHostInputValid()
     {
         $req = new SafeRequest(
             array(
@@ -575,13 +534,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('foo-bar.0example0.com', $result);
     }
 
-
     /**
      * Test of SafeRequest::getRemoteHost() with null input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetRemoteUserInputNull()
+    public function testGetRemoteUserInputNull()
     {
         $req = new SafeRequest(
             array(
@@ -594,13 +552,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('', $result);
     }
 
-
     /**
      * Test of SafeRequest::getRemoteUser() with invalid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetRemoteUserInputInvalid()
+    public function testGetRemoteUserInputInvalid()
     {
         $req = new SafeRequest(
             array(
@@ -614,13 +571,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('', $result);
     }
 
-
     /**
      * Test of SafeRequest::getRemoteUser() with valid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetRemoteUserInputValid()
+    public function testGetRemoteUserInputValid()
     {
         $req = new SafeRequest(
             array(
@@ -634,13 +590,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('user_1', $result);
     }
 
-
     /**
      * Test of SafeRequest::getMethod() with null input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetMethodInputNull()
+    public function testGetMethodInputNull()
     {
         $req = new SafeRequest(
             array(
@@ -653,13 +608,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('', $result);
     }
 
-
     /**
      * Test of SafeRequest::getMethod() with invalid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetMethodInputInvalid()
+    public function testGetMethodInputInvalid()
     {
         $req = new SafeRequest(
             array(
@@ -673,13 +627,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('', $result);
     }
 
-
     /**
      * Test of SafeRequest::getMethod() with valid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetMethodInputValid()
+    public function testGetMethodInputValid()
     {
         $req = new SafeRequest(
             array(
@@ -693,13 +646,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('GET', $result);
     }
 
-
     /**
      * Test of SafeRequest::getRequestURI() with null input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetRequestURIInputNull()
+    public function testGetRequestURIInputNull()
     {
         $req = new SafeRequest(
             array(
@@ -712,13 +664,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('', $result);
     }
 
-
     /**
      * Test of SafeRequest::getRequestURI() with invalid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetRequestURIInputInvalid()
+    public function testGetRequestURIInputInvalid()
     {
         $req = new SafeRequest(
             array(
@@ -732,13 +683,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('', $result);
     }
 
-
     /**
      * Test of SafeRequest::getRequestURI() with valid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetRequestURIInputValid()
+    public function testGetRequestURIInputValid()
     {
         $req = new SafeRequest(
             array(
@@ -752,13 +702,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('/foo/bar.php', $result);
     }
 
-
     /**
      * Test of SafeRequest::getServerName() with null input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetServerNameInputNull()
+    public function testGetServerNameInputNull()
     {
         $req = new SafeRequest(
             array(
@@ -771,13 +720,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('', $result);
     }
 
-
     /**
      * Test of SafeRequest::getServerName() with invalid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetServerNameInputInvalid()
+    public function testGetServerNameInputInvalid()
     {
         $req = new SafeRequest(
             array(
@@ -813,13 +761,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('', $result);
     }
 
-
     /**
      * Test of SafeRequest::getServerName() with valid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetServerNameInputValid()
+    public function testGetServerNameInputValid()
     {
         $req = new SafeRequest(
             array(
@@ -844,13 +791,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('example.com', $result);
     }
 
-
     /**
      * Test of SafeRequest::getServerPort() with null input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetServerPortInputNull()
+    public function testGetServerPortInputNull()
     {
         $req = new SafeRequest(
             array(
@@ -863,13 +809,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(0, $result);
     }
 
-
     /**
      * Test of SafeRequest::getServerPort() with invalid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetServerPortInputInvalid()
+    public function testGetServerPortInputInvalid()
     {
         $req = new SafeRequest(
             array(
@@ -883,13 +828,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(0, $result);
     }
 
-
     /**
      * Test of SafeRequest::getServerPort() with valid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetServerPortInputValid()
+    public function testGetServerPortInputValid()
     {
         $req = new SafeRequest(
             array(
@@ -903,13 +847,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(80, $result);
     }
 
-
     /**
      * Test of SafeRequest::getHeader() with null input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetHeaderInputNull()
+    public function testGetHeaderInputNull()
     {
         $req = new SafeRequest(
             array(
@@ -921,13 +864,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertInternalType('null', $result);
     }
 
-
     /**
      * Test of SafeRequest::getHeader() with invalid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetHeaderInputInvalid()
+    public function testGetHeaderInputInvalid()
     {
         $req = new SafeRequest(
             array(
@@ -940,13 +882,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertInternalType('null', $result);
     }
 
-
     /**
      * Test of SafeRequest::getHeader() with valid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetHeaderInputValid()
+    public function testGetHeaderInputValid()
     {
         $req = new SafeRequest(
             array(
@@ -963,13 +904,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         );
     }
 
-
     /**
      * Test of SafeRequest::getCookie() with null input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetCookieInputNull()
+    public function testGetCookieInputNull()
     {
         $req = new SafeRequest(
             array(
@@ -981,13 +921,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertInternalType('null', $result);
     }
 
-
     /**
      * Test of SafeRequest::getCookie() with invalid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetCookieInputInvalid()
+    public function testGetCookieInputInvalid()
     {
         $req = new SafeRequest(
             array(
@@ -1000,13 +939,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertInternalType('null', $result);
     }
 
-
     /**
      * Test of SafeRequest::getCookie() with valid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetCookieInputValid()
+    public function testGetCookieInputValid()
     {
         $req = new SafeRequest(
             array(
@@ -1020,13 +958,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('bar', $result);
     }
 
-
     /**
      * Test of SafeRequest::getServerGlobal() with null input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetServerGlobalInputNull()
+    public function testGetServerGlobalInputNull()
     {
         $req = new SafeRequest(
             array(
@@ -1038,13 +975,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertInternalType('null', $result);
     }
 
-
     /**
      * Test of SafeRequest::getServerGlobal() with double encoding.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetServerGlobalInputDoubleEncoded()
+    public function testGetServerGlobalInputDoubleEncoded()
     {
         $req = new SafeRequest(
             array(
@@ -1057,13 +993,12 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertInternalType('null', $result);
     }
 
-
     /**
      * Test of SafeRequest::getServerGlobal() with valid input.
-     * 
+     *
      * @return bool true True on Pass.
      */
-    function testGetServerGlobalInputValid()
+    public function testGetServerGlobalInputValid()
     {
         $req = new SafeRequest(
             array(
@@ -1076,5 +1011,4 @@ class SafeRequestTest extends PHPUnit_Framework_TestCase
         $this->assertInternalType('string', $result);
         $this->assertEquals('/foo/bar', $result);
     }
-
 }

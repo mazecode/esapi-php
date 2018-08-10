@@ -15,51 +15,38 @@
  * @created 2009
  */
 
-require_once dirname(__FILE__).'/../../src/ESAPI.php';
-require_once dirname(__FILE__).'/../../src/codecs/OracleCodec.php';
-
-
 class OracleCodecTest extends PHPUnit_Framework_TestCase
 {
-	private $oracleCodec = null;
-	
-	function setUp()
-	{
-		global $ESAPI;
-
-		if ( !isset($ESAPI))
-		{
-			$ESAPI = new ESAPI();
-		}
-		
-		$this->oracleCodec = new OracleCodec();
-	}
-		
-	function testEncode()
-	{
-		$immune = array("");
-		
-		$this->assertEquals(' || \'\'x\'\' FROM DUAL;--', $this->oracleCodec->encode($immune, ' || \'x\' FROM DUAL;--'));
-		$this->assertEquals('\'\'', $this->oracleCodec->encode($immune, '\''));
-	}
-	
-	function testEncodeCharacter()
-	{
-		$immune = array("");
-		
-		$this->assertEquals("''", $this->oracleCodec->encode($immune, "'"));
-	}	
-	
-	function testDecode()
-	{
-		$this->assertEquals(' || \'x\' FROM DUAL;--', $this->oracleCodec->decode(' || \'\'x\'\' FROM DUAL;--'));
-		$this->assertEquals('\'', $this->oracleCodec->decode('\'\''));
-	}
-		
-	function testDecodeCharacter()
-	{
-		$this->assertEquals("'", $this->oracleCodec->decode("''"));
-	}
-	
+    private $oracleCodec;
+    
+    protected function setUp()
+    {
+        $this->oracleCodec = new OracleCodec();
+    }
+        
+    public function testEncode()
+    {
+        $immune = array();
+        
+        $this->assertEquals(' || \'\'x\'\' FROM DUAL;--', $this->oracleCodec->encode($immune, ' || \'x\' FROM DUAL;--'));
+        $this->assertEquals('\'\'', $this->oracleCodec->encode($immune, '\''));
+    }
+    
+    public function testEncodeCharacter()
+    {
+        $immune = array();
+        
+        $this->assertEquals("''", $this->oracleCodec->encode($immune, "'"));
+    }
+    
+    public function testDecode()
+    {
+        $this->assertEquals(' || \'x\' FROM DUAL;--', $this->oracleCodec->decode(' || \'\'x\'\' FROM DUAL;--'));
+        $this->assertEquals('\'', $this->oracleCodec->decode('\'\''));
+    }
+        
+    public function testDecodeCharacter()
+    {
+        $this->assertEquals("'", $this->oracleCodec->decode("''"));
+    }
 }
-?>

@@ -17,30 +17,13 @@
  * @link      http://www.owasp.org/index.php/ESAPI
  */
 
-
-require_once dirname(__FILE__).'/../../src/ESAPI.php';
-require_once dirname(__FILE__).'/../../src/reference/DefaultSanitizer.php';
-
-
 class SanitizerTest extends PHPUnit_Framework_TestCase
 {
-    function setUp()
-    {
-        global $ESAPI;
-        if ( !isset($ESAPI))
-        {
-            $ESAPI = new ESAPI();
-        }
-    }
-
-    function tearDown()
-    {
-    }
-
     /**
      * Test of getSanitizedHTML method of class Sanitizer.
      */
-    function testGetSanitizedHTML_01() {
+    public function testGetSanitizedHTML_01()
+    {
         $san = ESAPI::getSanitizer();
         
         $test1 = '<b>Jeff</b>';
@@ -51,7 +34,8 @@ class SanitizerTest extends PHPUnit_Framework_TestCase
     /**
      * Test of getSanitizedHTML method of class Sanitizer.
      */
-    function testGetSanitizedHTML_02() {
+    public function testGetSanitizedHTML_02()
+    {
         $san = ESAPI::getSanitizer();
         
         $test2 = "<a href=\"http://www.aspectsecurity.com\">Aspect Security</a>";
@@ -62,12 +46,12 @@ class SanitizerTest extends PHPUnit_Framework_TestCase
     /**
      * Test of getSanitizedHTML method of class Sanitizer.
      */
-    function testGetSanitizedHTML_03() {
+    public function testGetSanitizedHTML_03()
+    {
         $san = ESAPI::getSanitizer();
         
         $test3 = 'Test.<script>alert(document.cookie)</script>';
         $result3 = $san->getSanitizedHTML('test', $test3, 100, false);
         $this->assertEquals('Test.', $result3);
     }
-    
 }

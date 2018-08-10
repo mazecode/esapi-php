@@ -1,6 +1,6 @@
 <?php
 /**
- * OWASP Enterprise Security API (ESAPI)
+ * OWASP Enterprise Security API (ESAPI).
  *
  * This file is part of the Open Web Application Security Project (OWASP)
  * Enterprise Security API (ESAPI) project.
@@ -8,57 +8,63 @@
  * LICENSE: This source file is subject to the New BSD license.  You should read
  * and accept the LICENSE before you use, modify, and/or redistribute this
  * software.
- * 
+ *
  * PHP version 5.2
  *
  * @category  OWASP
+ *
  * @package   ESAPI_Codecs
- * @author    Linden Darling <Linden.Darling@jds.net.au>
+ *
+ * @author    Linden Darling <linden.darling@jds.net.au>
  * @author    Mike Boberski <boberski_michael@bah.com>
  * @copyright 2009-2010 The OWASP Foundation
  * @license   http://www.opensource.org/licenses/bsd-license.php New BSD license
+ *
  * @version   SVN: $Id$
+ *
  * @link      http://www.owasp.org/index.php/ESAPI
  */
-
-require_once 'Codec.php';
 
 /**
  * Reference implementation of the Unix codec.
  *
  * @category  OWASP
+ *
  * @package   ESAPI_Codecs
- * @author    Linden Darling <Linden.Darling@jds.net.au>
+ *
+ * @author    Linden Darling <linden.darling@jds.net.au>
  * @author    Mike Boberski <boberski_michael@bah.com>
  * @copyright 2009-2010 The OWASP Foundation
  * @license   http://www.opensource.org/licenses/bsd-license.php New BSD license
+ *
  * @version   Release: @package_version@
+ *
  * @link      http://www.owasp.org/index.php/ESAPI
  */
 class UnixCodec extends Codec
 {
+
     /**
-     * Public Constructor 
+     * Public Constructor.
      */
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
     }
-    
-    
+
     /**
      * {@inheritdoc}
      */
     public function encodeCharacter($immune, $c)
     {
-        //detect encoding, special-handling for chr(172) and chr(128) to chr(159) 
+        //detect encoding, special-handling for chr(172) and chr(128) to chr(159)
         //which fail to be detected by mb_detect_encoding()
         $initialEncoding = $this->detectEncoding($c);
         
         // Normalize encoding to UTF-32
         $_4ByteUnencodedOutput = $this->normalizeEncoding($c);
         
-        // Start with nothing; format it to match the encoding of the string passed 
+        // Start with nothing; format it to match the encoding of the string passed
         //as an argument.
         $encodedOutput = mb_convert_encoding("", $initialEncoding);
         
@@ -81,8 +87,7 @@ class UnixCodec extends Codec
         
         return $encodedOutput . "\\" . $c;
     }
-    
-    
+
     /**
      * {@inheritdoc}
      */
@@ -96,7 +101,9 @@ class UnixCodec extends Codec
             // eat the 1st character off the string and return null
             //todo: no point in doing this
             $_4ByteEncodedInput = mb_substr(
-                $input, 1, mb_strlen($_4ByteEncodedInput, "UTF-32"), "UTF-32"); 
+                $input, 1, mb_strlen($_4ByteEncodedInput, "UTF-32"), "UTF-32"
+            );
+
             return array(
                 'decodedCharacter' => null,
                 'encodedString' => null

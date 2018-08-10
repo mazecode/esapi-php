@@ -1,6 +1,6 @@
 <?php
 /**
- * OWASP Enterprise Security API (ESAPI)
+ * OWASP Enterprise Security API (ESAPI).
  *
  * This file is part of the Open Web Application Security Project (OWASP)
  * Enterprise Security API (ESAPI) project. For details, please see
@@ -12,41 +12,44 @@
  * LICENSE before you use, modify, and/or redistribute this software.
  *
  *  @package ESAPI_Reference
+ *
  *  @author Andrew van der Stock
  *  @created 2009
- *  @since 1.6
- *  @license BSD license
  *
+ *  @since 1.6
+ *
+ *  @license BSD license
  */
-
-require_once dirname(__FILE__).'/../AccessReferenceMap.php';
-require_once dirname(__FILE__).'/../StringUtilities.php';
 
 /**
  * Reference Implementation of the RandomAccessReferenceMap interface.
  *
  * @category  OWASP
+ *
  * @package   ESAPI_Reference
+ *
  * @copyright 2009-2010 The OWASP Foundation
  * @license   http://www.opensource.org/licenses/bsd-license.php New BSD license
+ *
  * @version   Release: @package_version@
+ *
  * @link      http://www.owasp.org/index.php/ESAPI
  */
 class RandomAccessReferenceMap implements AccessReferenceMap
 {
-    private $dtoi = null;
-    private $itod = null;
+    
+    private $dtoi;
+    private $itod;
     private $random = 0;
 
-    function __construct($directReferences = null)
+    public function __construct($directReferences = null)
     {
         $this->random = mt_rand();
 
         $this->dtoi = new ArrayObject();
         $this->itod = new ArrayObject();
 
-        if ( !empty($directReferences) )
-        {
+        if (!empty($directReferences)) {
             $this->update($directReferences);
         }
     }
@@ -57,7 +60,7 @@ class RandomAccessReferenceMap implements AccessReferenceMap
      *
      * @return the iterator
      */
-    function iterator()
+    public function iterator()
     {
         return $this->dtoi->getIterator();
     }
@@ -68,23 +71,19 @@ class RandomAccessReferenceMap implements AccessReferenceMap
      * URL's, form fields, hidden fields, etc... to help protect their private
      * implementation information.
      *
-     * @param directReference
-     * 		the direct reference
+     * @param $directReference The direct reference
      *
-     * @return
-     * 		the indirect reference
+     * @return The indirect reference
      */
-    function getIndirectReference($direct)
+    public function getIndirectReference($direct)
     {
-        if ( empty($direct) )
-        {
+        if (empty($direct)) {
             return null;
         }
 
         $hash = $this->getHash($direct);
 
-        if ( !($this->dtoi->offsetExists($hash)) )
-        {
+        if (!($this->dtoi->offsetExists($hash))) {
             return null;
         }
 
@@ -98,23 +97,20 @@ class RandomAccessReferenceMap implements AccessReferenceMap
      * invalid indirect reference is requested, then an AccessControlException is
      * thrown.
      *
-     * @param indirectReference
-     * 		the indirect reference
+     * @param $indirectReference The indirect reference
      *
-     * @return
-     * 		the direct reference
+     * @throws AccessControlException If no direct reference exists for the specified indirect reference
      *
-     * @throws AccessControlException
-     * 		if no direct reference exists for the specified indirect reference
+     * @return The direct reference
      */
-    function getDirectReference($indirectReference)
+    public function getDirectReference($indirectReference)
     {
-        if (!empty($indirectReference) && $this->itod->offsetExists($indirectReference) )
-        {
+        if (!empty($indirectReference) && $this->itod->offsetExists($indirectReference)) {
             return $this->itod->offsetGet($indirectReference);
         }
 
         throw new AccessControlException("Access denied", "Request for invalid indirect reference: " + $indirectReference);
+
         return null;
     }
 
@@ -122,23 +118,19 @@ class RandomAccessReferenceMap implements AccessReferenceMap
      * Adds a direct reference to the AccessReferenceMap, then generates and returns
      * an associated indirect reference.
      *
-     * @param direct
-     * 		the direct reference
+     * @param $direct The direct reference
      *
-     * @return
-     * 		the corresponding indirect reference
+     * @return The corresponding indirect reference
      */
-    function addDirectReference($direct)
+    public function addDirectReference($direct)
     {
-        if ( empty($direct) )
-        {
+        if (empty($direct)) {
             return null;
         }
 
         $hash = $this->getHash($direct);
 
-        if ( $this->dtoi->offsetExists($hash) )
-        {
+        if ($this->dtoi->offsetExists($hash)) {
             return $this->dtoi->offsetGet($hash);
         }
 
@@ -153,60 +145,57 @@ class RandomAccessReferenceMap implements AccessReferenceMap
     /**
      * Create a new random reference that is guaranteed to be unique.
      *
-     *  @return
-     *  	a random reference that is guaranteed to be unique
+     *  @return A random reference that is guaranteed to be unique
      */
-    function getUniqueRandomReference() {
+    public function getUniqueRandomReference()
+    {
         $candidate = null;
 
         do {
-            $candidate = ESAPI::getRandomizer()->getRandomString(6	, "123456789");
+            $candidate = ESAPI::getRandomizer()->getRandomString(6, "123456789");
         } while ($this->itod->offsetExists($candidate));
 
         return $candidate;
     }
 
-    function getHash($direct)
+    public function getHash($direct)
     {
-        if ( empty($direct) )
-        {
+        if (empty($direct)) {
             return null;
         }
 
         $hash = hexdec(substr(md5(serialize($direct)), -7));
+
         return $hash;
     }
 
     /**
      * Removes a direct reference and its associated indirect reference from the AccessReferenceMap.
      *
-     * @param direct
-     * 		the direct reference to remove
-     *
-     * @return
-     * 		the corresponding indirect reference
+     * @param $direct The direct reference to remove
      *
      * @throws AccessControlException
+     *
+     * @return The corresponding indirect reference
      */
-    function removeDirectReference($direct)
+    public function removeDirectReference($direct)
     {
-        if ( empty($direct) ) {
+        if (empty($direct)) {
             return null;
         }
 
         $hash = $this->getHash($direct);
 
-        if ( $this->dtoi->offsetExists($hash) ) {
+        if ($this->dtoi->offsetExists($hash)) {
             $indirect = $this->dtoi->offsetGet($hash);
             $this->itod->offsetUnset($indirect);
             $this->dtoi->offsetUnset($hash);
+
             return $indirect;
         }
 
         return null;
     }
-
-
 
     /**
      * Updates the access reference map with a new set of direct references, maintaining
@@ -215,10 +204,9 @@ class RandomAccessReferenceMap implements AccessReferenceMap
      * might mess up anything that previously used an indirect reference, such
      * as a URL parameter.
      *
-     * @param directReferences
-     * 		a Set of direct references to add
+     * @param $directReferences A set of direct references to add
      */
-    function update($directReferences)
+    public function update($directReferences)
     {
         $dtoi_old = clone $this->dtoi;
 
@@ -231,21 +219,18 @@ class RandomAccessReferenceMap implements AccessReferenceMap
         $dir = new ArrayObject($directReferences);
         $directIterator = $dir->getIterator();
 
-        while ($directIterator->valid())
-        {
+        while ($directIterator->valid()) {
             $indirect = null;
             $direct = $directIterator->current();
             $hash = $this->getHash($direct);
-            	
+                
             // Try to get the old direct object reference (if it exists)
             // otherwise, create a new entry
-            if (!empty($direct) && $dtoi_old->offsetExists($hash) )
-            {
+            if (!empty($direct) && $dtoi_old->offsetExists($hash)) {
                 $indirect = $dtoi_old->offsetGet($hash);
             }
-            	
-            if ( empty($indirect) )
-            {
+                
+            if (empty($indirect)) {
                 $indirect = $this->getUniqueRandomReference();
             }
             $this->itod->offsetSet($indirect, $direct);
@@ -254,4 +239,3 @@ class RandomAccessReferenceMap implements AccessReferenceMap
         }
     }
 }
-?>

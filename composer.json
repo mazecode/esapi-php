@@ -18,6 +18,7 @@
 		}
 	},
 	"require": {
+		"apache/log4php": "2.0.0",
 		"ezyang/htmlpurifier": "^4.10"
 	}
 }

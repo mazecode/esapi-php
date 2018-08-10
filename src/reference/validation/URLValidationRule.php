@@ -1,6 +1,6 @@
 <?php
 /**
- * OWASP Enterprise Security API (ESAPI)
+ * OWASP Enterprise Security API (ESAPI).
  *
  * This file is part of the Open Web Application Security Project (OWASP)
  * Enterprise Security API (ESAPI) project.
@@ -8,38 +8,41 @@
  * LICENSE: This source file is subject to the New BSD license.  You should read
  * and accept the LICENSE before you use, modify, and/or redistribute this
  * software.
- * 
+ *
  * PHP version 5.2
  *
  * @category  OWASP
+ *
  * @package   ESAPI_Reference_Validation
+ *
  * @author    Mike Boberski <boberski_michael@bah.com>
  * @copyright 2009-2010 The OWASP Foundation
  * @license   http://www.opensource.org/licenses/bsd-license.php New BSD license
+ *
  * @version   SVN: $Id$
+ *
  * @link      http://www.owasp.org/index.php/ESAPI
  */
-
-/**
- * URLValidationRule requires the StringValidationRule.
- */
-require_once dirname(__FILE__) . '/StringValidationRule.php';
-
 
 /**
  * Reference extension of the StringValidationRule class.
  *
  * @category  OWASP
+ *
  * @package   ESAPI_Reference_Validation
+ *
  * @author    Mike Boberski <boberski_michael@bah.com>
  * @copyright 2009-2010 The OWASP Foundation
  * @license   http://www.opensource.org/licenses/bsd-license.php New BSD license
+ *
  * @version   Release: @package_version@
+ *
  * @link      http://www.owasp.org/index.php/ESAPI
  */
 class URLValidationRule extends StringValidationRule
 {
-    private $_auditor   = null;
+
+    private $_auditor;
  
     /**
      * Constructor sets-up the validation rule with a descriptive name for this
@@ -50,18 +53,15 @@ class URLValidationRule extends StringValidationRule
      *
      * @param string $typeName         descriptive name for this validator.
      * @param object $encoder          providing canonicalize method.
-     * @param string $whitelistPattern whitelist regex.
-     * 
+     * @param string $whitelistPattern Whitelist regex.
+     *
      * @return does not return a value.
      */
-    public function __construct($typeName, $encoder = null, 
-        $whitelistPattern = null
-    ) {
-        global $ESAPI;
-
+    public function __construct($typeName, $encoder = null, $whitelistPattern = null)
+    {
         parent::__construct($typeName, $encoder);
 
-        $this->_auditor = $ESAPI->getAuditor("URLValidationRule");
+        $this->_auditor = ESAPI::getAuditor("URLValidationRule");
     }
 
     /**
@@ -70,14 +70,14 @@ class URLValidationRule extends StringValidationRule
      * IntrusionException if the input is an obvious attack.
      *
      * @param string $context A descriptive name of the parameter that you are
-     *                        validating (e.g., ProfilePage_Signature). This value 
-     *                        is used by any logging or error handling that is done 
+     *                        validating (e.g., ProfilePage_Signature). This value
+     *                        is used by any logging or error handling that is done
      *                        with respect to the value passed in.
      * @param string $input   The actual string user input data to validate.
      *
-     * @return string canonicalized, valid input.
-     *
      * @throws ValidationException, IntrusionException
+     *
+     * @return string canonicalized, valid input.
      */
     public function getValid($context, $input)
     {
@@ -88,7 +88,7 @@ class URLValidationRule extends StringValidationRule
         if ($clean_url == false) {
             throw new ValidationException(
                 'URL Input is not valid.',
-                'Error attempting to sanitize URL: '. $input,
+                'Error attempting to sanitize URL: ' . $input,
                 $context
             );
         }
@@ -96,7 +96,7 @@ class URLValidationRule extends StringValidationRule
         if (strcmp($canonical, $clean_url) !== 0) {
             throw new ValidationException(
                 'URL Input may not be valid.',
-                'Resorted to string comparsion of canonicalized and purified'.
+                'Resorted to string comparsion of canonicalized and purified' .
                 ' URL input - result was Not Equal',
                 $context
             );
@@ -105,14 +105,13 @@ class URLValidationRule extends StringValidationRule
         return $clean_url;
     }
 
-
     /**
      * Simply attempt to purify the URL and return an empty string if that
      * fails.
      *
      * @param string $context A descriptive name of the parameter that you are
-     *                        validating (e.g., ProfilePage_Signature). This value 
-     *                        is used by any logging or error handling that is done 
+     *                        validating (e.g., ProfilePage_Signature). This value
+     *                        is used by any logging or error handling that is done
      *                        with respect to the value passed in.
      * @param string $input   The actual user input data to validate.
      *
@@ -127,5 +126,4 @@ class URLValidationRule extends StringValidationRule
             return $clean_url;
         }
     }
-
 }

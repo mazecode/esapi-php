@@ -15,48 +15,36 @@
  * @created 2009
  */
 
-require_once dirname(__FILE__).'/../../src/ESAPI.php';
-require_once dirname(__FILE__).'/../../src/codecs/VBScriptCodec.php';
-
-
 class VBScriptCodecTest extends PHPUnit_Framework_TestCase
 {
-	private $vbScriptCodec = null;
-	
-	function setUp()
-	{
-		global $ESAPI;
+    private $vbScriptCodec;
+    
+    protected function setUp()
+    {
+        $this->vbScriptCodec = new VBScriptCodec();
+    }
+        
+    public function testEncode()
+    {
+        $immune = array(" ");
 
-		if ( !isset($ESAPI))
-		{
-			$ESAPI = new ESAPI();
-		}
-		
-		$this->vbScriptCodec = new VBScriptCodec();
-	}
-		
-	function testEncode()
-	{
-		$immune = array(" ");
-
-		$this->assertEquals( " \"!\"@\"$\"%\"(\")\"=\"+\"{\"}\"[\"]\"\"\"<script\">", $this->vbScriptCodec->encode($immune, " !@$%()=+{}[]\"<script>") );
-	}
-	
-	function testEncodeCharacter()
-	{
-		$immune = array(" ");
-		
-		$this->assertEquals( "\"<", $this->vbScriptCodec->encode($immune, "<") );
-	}
-	
-	function testDecode()
-	{
-		$this->assertEquals( " !@$%()=+{}[]\"", $this->vbScriptCodec->decode(" \"!\"@\"$\"%\"(\")\"=\"+\"{\"}\"[\"]\"\"") );
-	}
-		
-	function testDecodeCharacter()
-	{
-		$this->assertEquals( "<", $this->vbScriptCodec->decode("\"<") );
-	}
+        $this->assertEquals(" \"!\"@\"$\"%\"(\")\"=\"+\"{\"}\"[\"]\"\"\"<script\">", $this->vbScriptCodec->encode($immune, " !@$%()=+{}[]\"<script>"));
+    }
+    
+    public function testEncodeCharacter()
+    {
+        $immune = array(" ");
+        
+        $this->assertEquals("\"<", $this->vbScriptCodec->encode($immune, "<"));
+    }
+    
+    public function testDecode()
+    {
+        $this->assertEquals(" !@$%()=+{}[]\"", $this->vbScriptCodec->decode(" \"!\"@\"$\"%\"(\")\"=\"+\"{\"}\"[\"]\"\""));
+    }
+        
+    public function testDecodeCharacter()
+    {
+        $this->assertEquals("<", $this->vbScriptCodec->decode("\"<"));
+    }
 }
-?>

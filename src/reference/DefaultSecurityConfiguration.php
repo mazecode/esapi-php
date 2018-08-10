@@ -1,6 +1,6 @@
 <?php
 /**
- * OWASP Enterprise Security API (ESAPI)
+ * OWASP Enterprise Security API (ESAPI).
  *
  * This file is part of the Open Web Application Security Project (OWASP)
  * Enterprise Security API (ESAPI) project.
@@ -12,79 +12,86 @@
  * software.
  *
  * @category  OWASP
+ *
  * @package   ESAPI_Reference
+ *
  * @author    Andrew van der Stock <vanderaj@owasp.org>
  * @author    Mike Boberski <boberski_michael@bah.com>
  * @copyright 2009-2010 The OWASP Foundation
  * @license   http://www.opensource.org/licenses/bsd-license.php New BSD license
+ *
  * @version   SVN: $Id$
+ *
  * @link      http://www.owasp.org/index.php/ESAPI
  */
-
-require_once dirname(__FILE__) . '/../SecurityConfiguration.php';
 
 /**
  * Reference Implementation of the SecurityConfiguration interface.
  *
  * @category  OWASP
+ *
  * @package   ESAPI_Reference
+ *
  * @author    Andrew van der Stock <vanderaj@owasp.org>
  * @author    Mike Boberski <boberski_michael@bah.com>
  * @copyright 2009-2010 The OWASP Foundation
  * @license   http://www.opensource.org/licenses/bsd-license.php New BSD license
+ *
  * @version   Release: @package_version@
+ *
  * @link      http://www.owasp.org/index.php/ESAPI
  */
 class DefaultSecurityConfiguration implements SecurityConfiguration
 {
+
     // SimpleXML reads the entire file into memory
-    private $_xml = null;
+    private $_xml;
 
     // Authenticator
 
-    private $_RememberTokenDuration = null;
-    private $_AllowedLoginAttempts = null;
-    private $_MaxOldPasswordHashes = null;
-    private $_UsernameParameterName = null;
-    private $_PasswordParameterName = null;
-    private $_IdleTimeoutDuration = null;
-    private $_AbsoluteTimeoutDuration = null;
+    private $_RememberTokenDuration;
+    private $_AllowedLoginAttempts;
+    private $_MaxOldPasswordHashes;
+    private $_UsernameParameterName;
+    private $_PasswordParameterName;
+    private $_IdleTimeoutDuration;
+    private $_AbsoluteTimeoutDuration;
 
     // Encoder
 
     // Executor
 
-    private $_AllowedExecutables = null;
-    private $_WorkingDirectory = null;
+    private $_AllowedExecutables;
+    private $_WorkingDirectory;
 
     // Encryptor
 
-    private $_CharacterEncoding = null;
-    private $_MasterKey = null;
-    private $_MasterSalt = null;
-    private $_EncryptionAlgorithm = null;
-    private $_HashAlgorithm = null;
-    private $_DigitalSignatureAlgorithm = null;
-    private $_RandomAlgorithm = null;
+    private $_CharacterEncoding;
+    private $_MasterKey;
+    private $_MasterSalt;
+    private $_EncryptionAlgorithm;
+    private $_HashAlgorithm;
+    private $_DigitalSignatureAlgorithm;
+    private $_RandomAlgorithm;
 
     // HTTPUtilities
 
-    private $_AllowedFileExtensions = null;
-    private $_maxUploadSize = null;
-    private $_ResponseContentType = null;
-    private $_AllowedIncludes = null;
-    private $_AllowedResources = null;
+    private $_AllowedFileExtensions;
+    private $_maxUploadSize;
+    private $_ResponseContentType;
+    private $_AllowedIncludes;
+    private $_AllowedResources;
 
     // Logger
 
-    private $_ApplicationName = null;
-    private $_LogApplicationName = null;
-    private $_LogEncodingRequired = null;
-    private $_LogLevel = null;
-    private $_LogFileName = null;
-    private $_MaxLogFileSize = null;
-    private $_MaxLogFileBackups = null;
-    private $_LogFileDateFormat = null;
+    private $_ApplicationName;
+    private $_LogApplicationName;
+    private $_LogEncodingRequired;
+    private $_LogLevel;
+    private $_LogFileName;
+    private $_MaxLogFileSize;
+    private $_MaxLogFileBackups;
+    private $_LogFileDateFormat;
 
     // Validator
 
@@ -92,32 +99,29 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
 
     // IntrusionDetector
 
-    private $_DisableIntrusionDetection = null;
+    private $_DisableIntrusionDetection;
 
-    private $_events = null;
+    private $_events;
 
-    private $_resourceDir = null;
+    private $_resourceDir;
 
     // Special Debugging
 
-    private $_SpecialDebugging = null;
+    private $_SpecialDebugging;
 
     /**
      * SecurityConfiguration constructor.
      *
-     * @param string $path configuration file path.
+     * @param string $path Configuration file path.
      *
      * @return does not return a value.
      */
-    function __construct($path = '')
+    public function __construct($path = '')
     {
-        try
-        {
+        try {
             $this->_loadConfiguration($path);
             $this->setResourceDirectory(dirname(realpath($path)));
-        }
-        catch ( Exception $e )
-        {
+        } catch (Exception $e) {
             $this->_logSpecial($e->getMessage());
         }
     }
@@ -127,15 +131,16 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
      *
      * @param string $path ESAPI configuration file path.
      *
-     * @return does not return a value.
      * @throws Exception thrown if configuration file does not exist.
+     *
+     * @return does not return a value.
      */
     private function _loadConfiguration($path)
     {
-        if ( file_exists($path) ) {
+        if (file_exists($path)) {
             $this->_xml = simplexml_load_file($path);
 
-            if ( $this->_xml === false ) {
+            if ($this->_xml === false) {
                 throw new Exception("Failed to load security configuration.");
             }
         } else {
@@ -152,13 +157,14 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     {
         $_events = $this->_xml->xpath('/esapi-properties/IntrusionDetector/event');
 
-        if ( $_events === false ) {
+        if ($_events === false) {
             $this->_events = null;
             $this->_logSpecial(
-                'SecurityConfiguration for '.
+                'SecurityConfiguration for ' .
                 '/esapi-properties/IntrusionDetector/event not found in ESAPI.xml.'
-                );
-                return false;
+            );
+            
+            return false;
         }
 
         $this->_events = array();
@@ -172,27 +178,26 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
             $interval = (int) $event->attributes()->interval;
 
             $actions = array();
-            foreach ( $event->action as $node ) {
+            foreach ($event->action as $node) {
                 $actions[] = (string) $node;
             }
 
             // Validate the event
 
-            if ( !empty($name) && $count > 0 && $interval > 0 && !empty($actions) ) {
+            if (!empty($name) && $count > 0 && $interval > 0 && !empty($actions)) {
                 // Add a new threshold object to $_events array
-                $this->_events[] = new Threshold(
-                $name, $count, $interval, $actions
-                );
+                $this->_events[] = new Threshold($name, $count, $interval, $actions);
             }
         }
 
-        if ( count($this->_events) == 0 ) {
+        if (count($this->_events) == 0) {
             $this->_events = null;
             $this->_logSpecial(
-                'SecurityConfiguration found no valid events in '.
-                'the Intrusion Detection section.' 
-                );
-                return false;
+                'SecurityConfiguration found no valid events in ' .
+                'the Intrusion Detection section.'
+            );
+            
+            return false;
         }
 
         return true;
@@ -222,16 +227,16 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     {
         $val = $def;
 
-        $var = $this->_xml->xpath('/esapi-properties/'.$prop);
+        $var = $this->_xml->xpath('/esapi-properties/' . $prop);
 
-        if ( $var === false ) {
+        if ($var === false) {
             $this->_logSpecial(
-                'SecurityConfiguration for /esapi-properties/'.
-            $prop.' not found in ESAPI.xml. Using default: '. $def
+                'SecurityConfiguration for /esapi-properties/' .
+                $prop . ' not found in ESAPI.xml. Using default: ' . $def
             );
         }
 
-        if (isset($var[0]) ) {
+        if (isset($var[0])) {
             $val = (string) $var[0];
         }
 
@@ -250,17 +255,17 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     {
         $val = $def;
 
-        $var = $this->_xml->xpath('/esapi-properties/'.$prop);
+        $var = $this->_xml->xpath('/esapi-properties/' . $prop);
 
-        if ( $var === false ) {
+        if ($var === false) {
             $this->_logSpecial(
-                'SecurityConfiguration for /esapi-properties/'.
-            $prop.' not found in ESAPI.xml. Using default: '.$def
+                'SecurityConfiguration for /esapi-properties/' .
+                $prop . ' not found in ESAPI.xml. Using default: ' . $def
             );
         }
 
         $result = array();
-        if (isset($var) ) {
+        if (isset($var)) {
             foreach ($var as $node) {
                 $result[] = (string) $node;
             }
@@ -280,28 +285,28 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
      */
     private function _getESAPIValidationExpression($type)
     {
-
         $val = null;
         $found = false;
         $i = 0;
 
         $var = $this->_xml->xpath('//regexp');
 
-        if ( $var === false ) {
+        if ($var === false) {
             $this->_logSpecial(
-                'getESAPIValidationExpression: No regular '.
+                'getESAPIValidationExpression: No regular ' .
                 'expressions in the config file.'
-                );
-                return false;
+            );
+            
+            return false;
         }
 
-        if (isset($var[0]) ) {
-            while (list( , $node) = each($var)) {
+        if (isset($var[0])) {
+            while (list(, $node) = each($var)) {
                 $result[] = (string) $node;
 
                 foreach ($node->attributes() as $a => $b) {
                     if (!strcmp($a, "name")) {
-                        if ( !strcmp((string) $b, $type)) {
+                        if (!strcmp((string) $b, $type)) {
                             $val = $var[$i];
                             $found = true;
                             break 2;
@@ -312,13 +317,14 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
             }
         }
 
-        if ( $found && isset($val->attributes()->value) ) {
-            return (string)$val->attributes()->value;
+        if ($found && isset($val->attributes()->value)) {
+            return (string) $val->attributes()->value;
         } else {
             $this->_logSpecial(
-                'getESAPIValidationExpression: Cannot find '.
-                'regular expression: ' . $type 
+                'getESAPIValidationExpression: Cannot find ' .
+                'regular expression: ' . $type
             );
+            
             return false;
         }
     }
@@ -348,20 +354,20 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     {
         $val = $def;
 
-        $var = $this->_xml->xpath('/esapi-properties/'.$prop);
+        $var = $this->_xml->xpath('/esapi-properties/' . $prop);
 
-        if ( $var === false ) {
+        if ($var === false) {
             $this->_logSpecial(
-                'SecurityConfiguration for /esapi-properties/'.
-            $prop.' not found in ESAPI.xml. Using default: '. $def
+                'SecurityConfiguration for /esapi-properties/' .
+                $prop . ' not found in ESAPI.xml. Using default: ' . $def
             );
         }
 
-        if (isset($var[0]) ) {
+        if (isset($var[0])) {
             $val = (int) $var[0];
         }
 
-        return (string)$val;
+        return (string) $val;
     }
 
     /**
@@ -376,8 +382,8 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     {
         $val = $this->_getESAPIStringProperty($prop, $def);
 
-        if ( $val !== $def ) {
-            $val = ( strtolower($val) == "false" ) ? false : true;
+        if ($val !== $def) {
+            $val = (strtolower($val) == "false") ? false : true;
         }
 
         return $val;
@@ -386,12 +392,12 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getApplicationName()
+    public function getApplicationName()
     {
-        if ( $this->_ApplicationName === null ) {
+        if ($this->_ApplicationName === null) {
             $this->_ApplicationName = $this->_getESAPIStringProperty(
                 "Logger/ApplicationName", 'DefaultName'
-                );
+            );
         }
 
         return $this->_ApplicationName;
@@ -400,9 +406,9 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getRememberTokenDuration()
+    public function getRememberTokenDuration()
     {
-        if ( $this->_RememberTokenDuration === null ) {
+        if ($this->_RememberTokenDuration === null) {
             $this->_RememberTokenDuration = $this->_getESAPIIntProperty(
                 "Authenticator/RememberTokenDuration", 14
             );
@@ -414,7 +420,7 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getAllowedLoginAttempts()
+    public function getAllowedLoginAttempts()
     {
         if ($this->_AllowedLoginAttempts === null) {
             $this->_AllowedLoginAttempts = $this->_getESAPIIntProperty(
@@ -428,9 +434,9 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getMaxOldPasswordHashes()
+    public function getMaxOldPasswordHashes()
     {
-        if ( $this->_MaxOldPasswordHashes === null ) {
+        if ($this->_MaxOldPasswordHashes === null) {
             $this->_MaxOldPasswordHashes = $this->_getESAPIIntProperty(
                 "Authenticator/MaxOldPasswordHashes", 12
             );
@@ -442,12 +448,12 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getPasswordParameterName()
+    public function getPasswordParameterName()
     {
-        if ( $this->_PasswordParameterName === null ) {
+        if ($this->_PasswordParameterName === null) {
             $this->_PasswordParameterName = $this->_getESAPIStringProperty(
                 "Authenticator/PasswordParameterName", 'password'
-                );
+            );
         }
 
         return $this->_PasswordParameterName;
@@ -456,12 +462,12 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getUsernameParameterName()
+    public function getUsernameParameterName()
     {
-        if ( $this->_UsernameParameterName === null ) {
+        if ($this->_UsernameParameterName === null) {
             $this->_UsernameParameterName = $this->_getESAPIStringProperty(
                 "Authenticator/UsernameParameterName", 'username'
-                );
+            );
         }
 
         return $this->_UsernameParameterName;
@@ -470,9 +476,9 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getSessionIdleTimeoutLength()
+    public function getSessionIdleTimeoutLength()
     {
-        if ( $this->_IdleTimeoutDuration === null ) {
+        if ($this->_IdleTimeoutDuration === null) {
             $this->_IdleTimeoutDuration = $this->_getESAPIIntProperty(
                 "Authenticator/IdleTimeoutDuration", 20
             );
@@ -484,9 +490,9 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getSessionAbsoluteTimeoutLength()
+    public function getSessionAbsoluteTimeoutLength()
     {
-        if ( $this->_AbsoluteTimeoutDuration === null ) {
+        if ($this->_AbsoluteTimeoutDuration === null) {
             $this->_AbsoluteTimeoutDuration = $this->_getESAPIIntProperty(
                 "Authenticator/AbsoluteTimeoutDuration", 20
             );
@@ -498,9 +504,9 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getMasterKey()
+    public function getMasterKey()
     {
-        if ( $this->_MasterKey === null ) {
+        if ($this->_MasterKey === null) {
             $this->_MasterKey = $this->_getESAPIEncodedStringProperty(
                 "Encryptor/secrets/MasterKey", null
             );
@@ -512,9 +518,9 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getMasterSalt()
+    public function getMasterSalt()
     {
-        if ( $this->_MasterSalt === null ) {
+        if ($this->_MasterSalt === null) {
             $this->_MasterSalt = $this->_getESAPIEncodedStringProperty(
                 "Encryptor/secrets/MasterSalt", null
             );
@@ -526,9 +532,9 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getAllowedFileExtensions()
+    public function getAllowedFileExtensions()
     {
-        if ( $this->_AllowedFileExtensions === null ) {
+        if ($this->_AllowedFileExtensions === null) {
             $this->_AllowedFileExtensions = $this->_getESAPIArrayProperty(
                 "HttpUtilities/ApprovedUploadExtensions/extension", null
             );
@@ -540,9 +546,9 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getAllowedFileUploadSize()
+    public function getAllowedFileUploadSize()
     {
-        if ( $this->_maxUploadSize === null ) {
+        if ($this->_maxUploadSize === null) {
             $this->_maxUploadSize = $this->_getESAPIIntProperty(
                 "HttpUtilities/maxUploadFileBytes", 20
             );
@@ -554,12 +560,12 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getEncryptionAlgorithm()
+    public function getEncryptionAlgorithm()
     {
-        if ( $this->_EncryptionAlgorithm === null ) {
+        if ($this->_EncryptionAlgorithm === null) {
             $this->_EncryptionAlgorithm = $this->_getESAPIStringProperty(
                 "Encryptor/EncryptionAlgorithm", 'AES'
-                );
+            );
         }
 
         return $this->_EncryptionAlgorithm;
@@ -568,12 +574,12 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getHashAlgorithm()
+    public function getHashAlgorithm()
     {
-        if ( $this->_HashAlgorithm === null ) {
+        if ($this->_HashAlgorithm === null) {
             $this->_HashAlgorithm = $this->_getESAPIStringProperty(
                 "Encryptor/HashAlgorithm", 'SHA-512'
-                );
+            );
         }
 
         return $this->_HashAlgorithm;
@@ -582,12 +588,12 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getCharacterEncoding()
+    public function getCharacterEncoding()
     {
-        if ( $this->_CharacterEncoding === null ) {
+        if ($this->_CharacterEncoding === null) {
             $this->_CharacterEncoding = $this->_getESAPIStringProperty(
                 "Encryptor/CharacterEncoding", 'UTF-8'
-                );
+            );
         }
 
         return $this->_CharacterEncoding;
@@ -596,12 +602,12 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getDigitalSignatureAlgorithm()
+    public function getDigitalSignatureAlgorithm()
     {
-        if ( $this->_DigitalSignatureAlgorithm === null ) {
+        if ($this->_DigitalSignatureAlgorithm === null) {
             $this->_DigitalSignatureAlgorithm = $this->_getESAPIStringProperty(
                 "Encryptor/DigitalSignatureAlgorithm", 'DSA'
-                );
+            );
         }
 
         return $this->_DigitalSignatureAlgorithm;
@@ -610,12 +616,12 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getRandomAlgorithm()
+    public function getRandomAlgorithm()
     {
-        if ( $this->_RandomAlgorithm === null ) {
+        if ($this->_RandomAlgorithm === null) {
             $this->_RandomAlgorithm = $this->_getESAPIStringProperty(
                 "Encryptor/RandomAlgorithm", 'SHA1PRNG'
-                );
+            );
         }
 
         return $this->_RandomAlgorithm;
@@ -624,15 +630,15 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getQuota($eventName)
+    public function getQuota($eventName)
     {
-        if ( $eventName == null ) {
+        if ($eventName == null) {
             return null;
         }
 
-        if ( $this->_events == null ) {
+        if ($this->_events == null) {
             $this->_loadEvents();
-            if ( $this->_events == null) {
+            if ($this->_events == null) {
                 return null;
             }
         }
@@ -641,7 +647,7 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
 
         $theEvent = null;
         foreach ($this->_events as $event) {
-            if ( $event->name == $eventName ) {
+            if ($event->name == $eventName) {
                 $theEvent = $event;
                 break;
             }
@@ -653,7 +659,7 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getDisableIntrusionDetection()
+    public function getDisableIntrusionDetection()
     {
         if ($this->_DisableIntrusionDetection === null) {
             $this->_DisableIntrusionDetection = $this->_getESAPIBooleanProperty(
@@ -667,7 +673,7 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getResourceDirectory()
+    public function getResourceDirectory()
     {
         return $this->_resourceDir;
     }
@@ -675,7 +681,7 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function setResourceDirectory($dir)
+    public function setResourceDirectory($dir)
     {
         $this->_resourceDir = $dir;
     }
@@ -683,12 +689,12 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getResponseContentType()
+    public function getResponseContentType()
     {
-        if ( $this->_ResponseContentType === null ) {
+        if ($this->_ResponseContentType === null) {
             $this->_ResponseContentType = $this->_getESAPIStringProperty(
                 "HttpUtilities/ResponseContentType", 'UTF-8'
-                );
+            );
         }
 
         return $this->_ResponseContentType;
@@ -697,9 +703,9 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getLogApplicationName()
+    public function getLogApplicationName()
     {
-        if ( $this->_LogApplicationName === null ) {
+        if ($this->_LogApplicationName === null) {
             $this->_LogApplicationName = $this->_getESAPIBooleanProperty(
                 "Logger/LogApplicationName", false
             );
@@ -711,9 +717,9 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getLogEncodingRequired()
+    public function getLogEncodingRequired()
     {
-        if ( $this->_LogEncodingRequired === null ) {
+        if ($this->_LogEncodingRequired === null) {
             $this->_LogEncodingRequired = $this->_getESAPIBooleanProperty(
                 "Logger/LogEncodingRequired", false
             );
@@ -725,12 +731,12 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getLogLevel()
+    public function getLogLevel()
     {
-        if ( $this->_LogLevel === null ) {
+        if ($this->_LogLevel === null) {
             $this->_LogLevel = $this->_getESAPIStringProperty(
                 "Logger/LogLevel", 'WARNING'
-                );
+            );
         }
 
         return $this->_LogLevel;
@@ -739,12 +745,12 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getLogFileName()
+    public function getLogFileName()
     {
-        if ( $this->_LogFileName === null ) {
+        if ($this->_LogFileName === null) {
             $this->_LogFileName = $this->_getESAPIStringProperty(
                 "Logger/LogFileName", 'ESAPI_logging_file'
-                );
+            );
         }
 
         return $this->_LogFileName;
@@ -753,9 +759,9 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getMaxLogFileSize()
+    public function getMaxLogFileSize()
     {
-        if ( $this->_MaxLogFileSize === null ) {
+        if ($this->_MaxLogFileSize === null) {
             $this->_MaxLogFileSize = $this->_getESAPIIntProperty(
                 "Logger/MaxLogFileSize", 10000000
             );
@@ -767,9 +773,9 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getMaxLogFileBackups()
+    public function getMaxLogFileBackups()
     {
-        if ( $this->_MaxLogFileBackups === null ) {
+        if ($this->_MaxLogFileBackups === null) {
             $this->_MaxLogFileBackups = $this->_getESAPIIntProperty(
                 "Logger/MaxLogFileBackups", 10
             );
@@ -781,12 +787,12 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getLogFileDateFormat()
+    public function getLogFileDateFormat()
     {
-        if ( $this->_LogFileDateFormat === null ) {
+        if ($this->_LogFileDateFormat === null) {
             $this->_LogFileDateFormat = $this->_getESAPIStringProperty(
                 "Logger/LogFileDateFormat", 'Y-m-d H:i:s P'
-                );
+            );
         }
 
         return $this->_LogFileDateFormat;
@@ -795,7 +801,7 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getValidationPattern($type)
+    public function getValidationPattern($type)
     {
         return $this->_getESAPIValidationExpression($type);
     }
@@ -803,11 +809,11 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getWorkingDirectory() {
-
-        if ( $this->_WorkingDirectory === null ) {
-            $path = ( substr(PHP_OS, 0, 3) == 'WIN' )?
-                'ExecutorWindows/WorkingDirectory':
+    public function getWorkingDirectory()
+    {
+        if ($this->_WorkingDirectory === null) {
+            $path = (substr(PHP_OS, 0, 3) == 'WIN') ?
+                'ExecutorWindows/WorkingDirectory' :
                 'ExecutorUnix/WorkingDirectory';
             $this->_WorkingDirectory = $this->_getESAPIStringProperty($path, '');
         }
@@ -818,10 +824,11 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getAllowedExecutables() {
-        if ( $this->_AllowedExecutables === null ) {
-            $path = ( substr(PHP_OS, 0, 3) == 'WIN' )?
-                'ExecutorWindows/ApprovedExecutables/command':
+    public function getAllowedExecutables()
+    {
+        if ($this->_AllowedExecutables === null) {
+            $path = (substr(PHP_OS, 0, 3) == 'WIN') ?
+                'ExecutorWindows/ApprovedExecutables/command' :
                 'ExecutorUnix/ApprovedExecutables/command';
             $this->_AllowedExecutables = $this->_getESAPIArrayProperty($path, null);
         }
@@ -832,8 +839,9 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getAllowedIncludes() {
-        if ( $this->_AllowedIncludes === null ) {
+    public function getAllowedIncludes()
+    {
+        if ($this->_AllowedIncludes === null) {
             $path = 'HttpUtilities/ApprovedIncludes/include';
             $this->_AllowedIncludes = $this->_getESAPIArrayProperty($path, null);
         }
@@ -844,9 +852,9 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     /**
      * @inheritdoc
      */
-    function getAllowedResources()
+    public function getAllowedResources()
     {
-        if ( $this->_AllowedResources === null ) {
+        if ($this->_AllowedResources === null) {
             $path = 'HttpUtilities/ApprovedResources/resource';
             $this->_AllowedResources = $this->_getESAPIArrayProperty($path, null);
         }
@@ -855,16 +863,16 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
     }
     
     /**
-     * getSpecialDebugging returns boolean true if special debugging should be
-     * enabled. Default is false.
+     * getSpecialDebugging returns TRUE if special debugging should be
+     * enabled. Default is FALSE.
      * At the moment, special debugging is used for producing output from
      * CodecDebug.
-     * 
-     * @return bool True if special debugging should be enabled. Default is false.
+     *
+     * @return bool True if special debugging should be enabled. Default is FALSE.
      */
-    function getSpecialDebugging() 
+    public function getSpecialDebugging()
     {
-        if ( $this->_SpecialDebugging === null ) {
+        if ($this->_SpecialDebugging === null) {
             $path = 'SpecialDebugging/Enabled';
             $this->_SpecialDebugging = $this->_getESAPIBooleanProperty($path, false);
         }
@@ -872,4 +880,3 @@ class DefaultSecurityConfiguration implements SecurityConfiguration
         return $this->_SpecialDebugging;
     }
 }
-?>

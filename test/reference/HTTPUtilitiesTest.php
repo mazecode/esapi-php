@@ -21,12 +21,9 @@
  * @link      http://www.owasp.org/index.php/ESAPI
  */
 
-
 /**
  * HttpUtilitiesTest requires SafeRequest.
  */
-require_once dirname(__FILE__) . '/../../src/filters/SafeRequest.php';
-
 
 /**
  * Tests for the reference implementation of the HTTPUtilities interface.
@@ -50,28 +47,25 @@ require_once dirname(__FILE__) . '/../../src/filters/SafeRequest.php';
  * @version   Release: @package_version@
  * @link      http://www.owasp.org/index.php/ESAPI
  */
-class HttpUtilitiesTest extends PHPUnit_Framework_TestCase
+class HTTPUtilitiesTest extends PHPUnit_Framework_TestCase
 {
-    private $_httpUtils = null;
+    private $_httpUtils;
 
     /**
      * Constructor ensures global ESAPI is set and stores an instance of
      * DefaultHTTPUtilities.
-     * 
-     * @return null
      */
-    public function __construct()
+    protected function setUp()
     {
         $this->_httpUtils = ESAPI::getHTTPUtilities();
     }
-
 
     /**
      * Test of addCSRFToken method of class HTTPUtilities.
      *
      * @return bool True on Pass.
      */
-    function testAddCSRFToken()
+    public function testAddCSRFToken()
     {
         $csrf1 = $this->_httpUtils->addCSRFToken("/test1");
         $this->assertTrue(
@@ -90,13 +84,12 @@ class HttpUtilitiesTest extends PHPUnit_Framework_TestCase
         );
     }
 
-
     /**
      * Test of getCookie method of class HTTPUtilities.
      *
      * @return bool True on Pass.
      */
-    function testGetCookie()
+    public function testGetCookie()
     {
         $req = new SafeRequest(
             array(
@@ -108,14 +101,13 @@ class HttpUtilitiesTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('bar', $this->_httpUtils->getCookie($req, 'foo'));
     }
 
-
     /**
      * Test of assertSecureRequest method of class HTTPUtilities.
      * All prerequisites for a secure request are met in this test.
      *
      * @return bool True on Pass.
      */
-    function testAssertSecureRequestInputSecure()
+    public function testAssertSecureRequestInputSecure()
     {
         $req = new SafeRequest(
             array(
@@ -128,14 +120,13 @@ class HttpUtilitiesTest extends PHPUnit_Framework_TestCase
         $this->assertNull($this->_httpUtils->assertSecureRequest($req));
     }
 
-
     /**
      * Test of assertSecureRequest method of class HTTPUtilities.
      * No TLS.
      *
      * @return bool True on Pass.
      */
-    function testAssertSecureRequestInputInsecureNoTLS()
+    public function testAssertSecureRequestInputInsecureNoTLS()
     {
         $req = new SafeRequest(
             array(
@@ -149,14 +140,13 @@ class HttpUtilitiesTest extends PHPUnit_Framework_TestCase
         $this->_httpUtils->assertSecureRequest($req);
     }
 
-
     /**
      * Test of assertSecureRequest method of class HTTPUtilities.
      * No TLS.
      *
      * @return bool True on Pass.
      */
-    function testAssertSecureRequestInputInsecureNoTLSAlt()
+    public function testAssertSecureRequestInputInsecureNoTLSAlt()
     {
         $req = new SafeRequest(
             array(
@@ -170,14 +160,13 @@ class HttpUtilitiesTest extends PHPUnit_Framework_TestCase
         $this->_httpUtils->assertSecureRequest($req);
     }
 
-
     /**
      * Test of assertSecureRequest method of class HTTPUtilities.
      * Not POST.
      *
      * @return bool True on Pass.
      */
-    function testAssertSecureRequestInputInsecureNotPOST()
+    public function testAssertSecureRequestInputInsecureNotPOST()
     {
         $req = new SafeRequest(
             array(
@@ -191,14 +180,13 @@ class HttpUtilitiesTest extends PHPUnit_Framework_TestCase
         $this->_httpUtils->assertSecureRequest($req);
     }
 
-
     /**
      * Test of assertSecureRequest method of class HTTPUtilities.
      * HTTPS env var not available
      *
      * @return bool True on Pass.
      */
-    function testAssertSecureRequestInputCannotCheck()
+    public function testAssertSecureRequestInputCannotCheck()
     {
         $req = new SafeRequest(
             array(
@@ -210,5 +198,4 @@ class HttpUtilitiesTest extends PHPUnit_Framework_TestCase
         $this->setExpectedException('EnterpriseSecurityException');
         $this->_httpUtils->assertSecureRequest($req);
     }
-
 }

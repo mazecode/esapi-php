@@ -1,10 +1,10 @@
 <?php
 /**
- * OWASP Enterprise Security API (ESAPI)
+ * OWASP Enterprise Security API (ESAPI).
  *
  * This file is part of the Open Web Application Security Project (OWASP)
  * Enterprise Security API (ESAPI) project.
- * 
+ *
  * PHP version 5.2
  *
  * LICENSE: This source file is subject to the New BSD license.  You should read
@@ -12,83 +12,79 @@
  * software.
  *
  * @category  OWASP
+ *
  * @package   ESAPI_Reference
+ *
  * @author    Jeff Williams <jeff.williams@aspectsecurity.com>
- * @author    Linden Darling <Linden.Darling@jds.net.au>
+ * @author    Linden Darling <linden.darling@jds.net.au>
  * @author    jah <jah@jahboite.co.uk>
  * @author    Mike Boberski <boberski_michael@bah.com>
  * @copyright 2009-2010 The OWASP Foundation
  * @license   http://www.opensource.org/licenses/bsd-license.php New BSD license
+ *
  * @version   SVN: $Id$
+ *
  * @link      http://www.owasp.org/index.php/ESAPI
  */
-
-/**
- * DefaultEncoder requires the interface it implements and any Codecs it uses.
- */
-require_once dirname(__FILE__).'/../Encoder.php';
-require_once dirname(__FILE__).'/../codecs/Base64Codec.php';
-require_once dirname(__FILE__).'/../codecs/CSSCodec.php';
-require_once dirname(__FILE__).'/../codecs/HTMLEntityCodec.php';
-require_once dirname(__FILE__).'/../codecs/JavaScriptCodec.php';
-require_once dirname(__FILE__).'/../codecs/PercentCodec.php';
-require_once dirname(__FILE__).'/../codecs/VBScriptCodec.php';
-require_once dirname(__FILE__).'/../codecs/XMLEntityCodec.php';
 
 /**
  * Reference implementation of the Encoder interface.
  *
  * @category  OWASP
+ *
  * @package   ESAPI_Reference
- * @author    Linden Darling <Linden.Darling@jds.net.au>
+ *
+ * @author    Linden Darling <linden.darling@jds.net.au>
  * @author    jah <jah@jahboite.co.uk>
  * @author    Mike Boberski <boberski_michael@bah.com>
  * @copyright 2009-2010 The OWASP Foundation
  * @license   http://www.opensource.org/licenses/bsd-license.php New BSD license
+ *
  * @version   Release: @package_version@
+ *
  * @link      http://www.owasp.org/index.php/ESAPI
  */
 class DefaultEncoder implements Encoder
 {
 
-    private $_base64Codec     = null;
-    private $_cssCodec        = null;
-    private $_htmlCodec       = null;
-    private $_javascriptCodec = null;
-    private $_percentCodec    = null;
-    private $_vbscriptCodec   = null;
-    private $_xmlCodec        = null;
+    private $_base64Codec;
+    private $_cssCodec;
+    private $_htmlCodec;
+    private $_javascriptCodec;
+    private $_percentCodec;
+    private $_vbscriptCodec;
+    private $_xmlCodec;
 
     /*
      * Character sets that define characters (in addition to alphanumerics) that are
      * immune from encoding in various formats
      */
-    private $_immune_css        = array( ' ' );
-    private $_immune_html       = array( ',', '.', '-', '_', ' ' );
-    private $_immune_htmlattr   = array( ',', '.', '-', '_' );
-    private $_immune_javascript = array( ',', '.', '_' );
-    private $_immune_os         = array( '-' );
-    private $_immune_sql        = array( ' ' );
-    private $_immune_vbscript   = array( ' ' );
-    private $_immune_xml        = array( ',', '.', '-', '_', ' ' );
-    private $_immune_xmlattr    = array( ',', '.', '-', '_' );
-    private $_immune_xpath      = array( ',', '.', '-', '_', ' ' );
-    private $_immune_url        = array( '.', '-', '*', '_');
+    private $_immune_css        = array(' ');
+    private $_immune_html       = array(',', '.', '-', '_', ' ');
+    private $_immune_htmlattr   = array(',', '.', '-', '_');
+    private $_immune_javascript = array(',', '.', '_');
+    private $_immune_os         = array('-');
+    private $_immune_sql        = array(' ');
+    private $_immune_vbscript   = array(' ');
+    private $_immune_xml        = array(',', '.', '-', '_', ' ');
+    private $_immune_xmlattr    = array(',', '.', '-', '_');
+    private $_immune_xpath      = array(',', '.', '-', '_', ' ');
+    private $_immune_url        = array('.', '-', '*', '_');
 
     private $_codecs = array();
-    private $_auditor = null;
+    private $_auditor;
 
     /**
      * Encoder constructor.
-     * 
+     *
      * @param array $codecs An array of Codec instances which will be used for
      *                      canonicalization.
-     *                    
-     * @return does not return a value.
-     * 
+     *
      * @throws InvalidArgumentException
+     *
+     * @return does not return a value.
      */
-    function __construct($codecs = null)
+    public function __construct($codecs = null)
     {
         $this->logger = ESAPI::getAuditor("Encoder");
 
@@ -109,7 +105,7 @@ class DefaultEncoder implements Encoder
             // leaving css and vbs codecs out - they eat / and " chars respectively
             // array_push($this->_codecs,$this->_cssCodec);
             // array_push($this->_codecs,$this->_vbscriptCodec);
-        } else if (! is_array($codecs)) {
+        } elseif (! is_array($codecs)) {
             throw new InvalidArgumentException(
                 'Expected the $codecs array parameter to be an array of instances of Codec.'
             );
@@ -124,14 +120,12 @@ class DefaultEncoder implements Encoder
             }
             $this->_codecs = array_merge($this->_codecs, $codecs);
         }
-
     }
-
 
     /**
      * @inheritdoc
      */
-    function canonicalize($input, $strict = true)
+    public function canonicalize($input, $strict = true)
     {
         if ($input === null) {
             return null;
@@ -159,124 +153,126 @@ class DefaultEncoder implements Encoder
                 }
             }
         }
-        if ( $foundCount >= 2 && $mixedCount > 1 ) {
-            if ( $strict == true ) {
-                throw new IntrusionException('Input validation failure',
-                    'Multiple (' . $foundCount . 'x) and mixed ('
-                    . $mixedCount . 'x) encoding detected in ' . $input
+        if ($foundCount >= 2 && $mixedCount > 1) {
+            if ($strict == true) {
+                throw new IntrusionException(
+                    'Input validation failure',
+                    "Multiple ({$foundCount}x) and mixed ({$mixedCount}x) encoding detected in {$input}"
                 );
             } else {
                 $this->logger->warning(
-                    Auditor::SECURITY, false,
-                    'Multiple (' . $foundCount . 'x) and mixed ('
-                    . $mixedCount . 'x) encoding detected in '.$input
+                    Auditor::SECURITY,
+                    false,
+                    "Multiple ({$foundCount}x) and mixed ({$mixedCount}x) encoding detected in {$input}"
                 );
             }
-        } else if ( $foundCount >= 2 ) {
-            if ( $strict == true ) {
+        } elseif ($foundCount >= 2) {
+            if ($strict == true) {
                 throw new IntrusionException(
                     'Input validation failure',
                     "Multiple encoding ({$foundCount}x) detected in {$input}"
                 );
             } else {
                 $this->logger->warning(
-                    Auditor::SECURITY, false,
+                    Auditor::SECURITY,
+                    false,
                     "Multiple encoding ({$foundCount}x) detected in {$input}"
                 );
             }
-        } else if ( $mixedCount > 1 ) {
-            if ( $strict == true ) {
+        } elseif ($mixedCount > 1) {
+            if ($strict == true) {
                 throw new IntrusionException(
                     'Input validation failure',
                     "Mixed encoding ({$mixedCount}x) detected in {$input}"
                 );
             } else {
                 $this->logger->warning(
-                    Auditor::SECURITY, false,
+                    Auditor::SECURITY,
+                    false,
                     "Mixed encoding ({$mixedCount}x) detected in {$input}"
                 );
             }
         }
+
         return $working;
     }
 
-
     /**
      * @inheritdoc
      */
-    function encodeForCSS($input)
+    public function encodeForCSS($input)
     {
         if ($input === null) {
             return null;
         }
+
         return $this->_cssCodec->encode($this->_immune_css, $input);
     }
 
-
     /**
      * @inheritdoc
      */
-    function encodeForHTML($input)
+    public function encodeForHTML($input)
     {
         if ($input === null) {
             return null;
         }
+
         return $this->_htmlCodec->encode($this->_immune_html, $input);
     }
 
-
     /**
      * @inheritdoc
      */
-    function encodeForHTMLAttribute($input)
+    public function encodeForHTMLAttribute($input)
     {
         if ($input === null) {
             return null;
         }
+
         return $this->_htmlCodec->encode($this->_immune_htmlattr, $input);
     }
 
-
     /**
      * @inheritdoc
      */
-    function encodeForJavaScript($input)
+    public function encodeForJavaScript($input)
     {
         if ($input === null) {
             return null;
         }
+
         return $this->_javascriptCodec->encode($this->_immune_javascript, $input);
     }
 
-
     /**
      * @inheritdoc
      */
-    function encodeForVBScript($input)
+    public function encodeForVBScript($input)
     {
         if ($input === null) {
             return null;
         }
+
         return $this->_vbscriptCodec->encode($this->_immune_vbscript, $input);
     }
 
-
     /**
      * @inheritdoc
      */
-    function encodeForSQL($codec, $input)
+    public function encodeForSQL($codec, $input)
     {
         if ($input === null) {
             return null;
         }
+
         return $codec->encode($this->_immune_sql, $input);
     }
-
 
     /**
      * @inheritdoc
      */
-    function encodeForOS($codec, $input)
+    public function encodeForOS($codec, $input)
     {
         if ($input === null) {
             return null;
@@ -284,9 +280,11 @@ class DefaultEncoder implements Encoder
         
         if ($codec instanceof Codec == false) {
             ESAPI::getLogger('Encoder')->error(
-                ESAPILogger::SECURITY, false,
+                ESAPILogger::SECURITY,
+                false,
                 'Invalid Argument, expected an instance of an OS Codec.'
             );
+
             return null;
         }
         
@@ -296,43 +294,43 @@ class DefaultEncoder implements Encoder
     /**
      * @inheritdoc
      */
-    function encodeForXPath($input)
+    public function encodeForXPath($input)
     {
         if ($input === null) {
             return null;
         }
+
         return $this->_htmlCodec->encode($this->_immune_xpath, $input);
     }
 
-
     /**
      * @inheritdoc
      */
-    function encodeForXML($input)
+    public function encodeForXML($input)
     {
         if ($input === null) {
             return null;
         }
+
         return $this->_xmlCodec->encode($this->_immune_xml, $input);
     }
 
-
     /**
      * @inheritdoc
      */
-    function encodeForXMLAttribute($input)
+    public function encodeForXMLAttribute($input)
     {
         if ($input === null) {
             return null;
         }
+
         return $this->_xmlCodec->encode($this->_immune_xmlattr, $input);
     }
-
 
     /**
      * @inheritdoc
      */
-    function encodeForURL($input)
+    public function encodeForURL($input)
     {
         if ($input === null) {
             return null;
@@ -354,9 +352,9 @@ class DefaultEncoder implements Encoder
                 continue; // already dealt with this character
             }
             $c = mb_substr($encoded, $i, 1, $initialEncoding);
-            $d = mb_substr($encoded, $i+1, 1, $initialEncoding);
-            $e = mb_substr($encoded, $i+2, 1, $initialEncoding);
-            if (   $this->_percentCodec->normalizeEncoding($c) == $pcnt
+            $d = mb_substr($encoded, $i + 1, 1, $initialEncoding);
+            $e = mb_substr($encoded, $i + 2, 1, $initialEncoding);
+            if ($this->_percentCodec->normalizeEncoding($c) == $pcnt
                 && $this->_percentCodec->normalizeEncoding($d) == $two
                 && $this->_percentCodec->normalizeEncoding($e) == $zero
             ) {
@@ -371,11 +369,10 @@ class DefaultEncoder implements Encoder
         return $decodedString;
     }
 
-
     /**
      * @inheritdoc
      */
-    function decodeFromURL($input)
+    public function decodeFromURL($input)
     {
         if ($input === null) {
             return null;
@@ -402,27 +399,27 @@ class DefaultEncoder implements Encoder
         return $this->_percentCodec->decode($decodedString);
     }
 
-
     /**
      * @inheritdoc
      */
-    function encodeForBase64($input, $wrap = true)
+    public function encodeForBase64($input, $wrap = true)
     {
         if ($input === null) {
             return null;
         }
+
         return $this->_base64Codec->encode($input, $wrap);
     }
 
-
     /**
      * @inheritdoc
      */
-    function decodeFromBase64($input)
+    public function decodeFromBase64($input)
     {
         if ($input === null) {
             return null;
         }
+
         return $this->_base64Codec->decode($input);
     }
 }

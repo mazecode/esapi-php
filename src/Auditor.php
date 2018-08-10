@@ -1,10 +1,10 @@
 <?php
 /**
- * OWASP Enterprise Security API (ESAPI)
+ * OWASP Enterprise Security API (ESAPI).
  *
  * This file is part of the Open Web Application Security Project (OWASP)
  * Enterprise Security API (ESAPI) project.
- * 
+ *
  * PHP version 5.2
  *
  * LICENSE: This source file is subject to the New BSD license.  You should read
@@ -12,33 +12,41 @@
  * software.
  *
  * @category  OWASP
+ *
  * @package   ESAPI
+ *
  * @author    Andrew van der Stock <vanderaj@owasp.org>
  * @author    Laura Bell <laura.d.bell@gmail.com>
  * @author    Mike Boberski <boberski_michael@bah.com>
  * @author    jah <jah@jahboite.co.uk>
  * @copyright 2009-2010 The OWASP Foundation
  * @license   http://www.opensource.org/licenses/bsd-license.php New BSD license
+ *
  * @version   SVN: $Id$
+ *
  * @link      http://www.owasp.org/index.php/ESAPI
  */
 
 /**
  * Use this ESAPI security control to wrap your auditing functions.
- * 
- * The idea behind this interface is to define a set of functions that can 
- * be used to log security events. Implementors should use a well 
+ *
+ * The idea behind this interface is to define a set of functions that can
+ * be used to log security events. Implementors should use a well
  * established logging library.
  *
  * @category  OWASP
+ *
  * @package   ESAPI
+ *
  * @author    Andrew van der Stock <vanderaj@owasp.org>
  * @author    Laura Bell <laura.d.bell@gmail.com>
  * @author    jah <jah@jahboite.co.uk>
  * @author    Mike Boberski <boberski_michael@bah.com>
  * @copyright 2009-2010 The OWASP Foundation
  * @license   http://www.opensource.org/licenses/bsd-license.php New BSD license
+ *
  * @version   Release: @package_version@
+ *
  * @link      http://www.owasp.org/index.php/ESAPI
  */
 interface Auditor
@@ -128,166 +136,152 @@ interface Auditor
      */
     const ALL   = 0;
 
-
     /**
      * Dynamically set the logging severity level. All events of this level and
      * higher will be logged from this point forward for all logs. All events
      * below this level will be discarded.
      *
      * @param int $level The level to set the logging level to.
-     * 
+     *
      * @return does not return a value.
      */
-    function setLevel($level);
-
+    public function setLevel($level);
 
     /**
      * Log a fatal level security event if 'fatal' level logging is enabled and
      * also record the stack trace associated with the event.
      *
      * @param int    $type      the type of event - an Logger Type constant.
-     * @param bool   $success   boolean true indicates this was a successful event, 
-     *                          false indicates this was a failed event (the typical
+     * @param bool   $success   TRUE indicates this was a successful event,
+     *                          FALSE indicates this was a failed event (the typical
      *                          value).
      * @param string $message   the message to log.
-     * @param string $throwable the exception to be logged.
-     * 
+     * @param string $throwable The exception to be logged.
+     *
      * @return does not return a value.
      */
-    function fatal($type, $success, $message, $throwable = null);
-
+    public function fatal($type, $success, $message, $throwable = null);
 
     /**
      * Allows the caller to determine if messages logged at this level will be
      * discarded, to avoid performing expensive processing.
      *
-     * @return bool true if fatal level messages will be output to the log.
+     * @return bool TRUE if fatal level messages will be output to the log.
      */
-    function isFatalEnabled();
-
+    public function isFatalEnabled();
 
     /**
      * Log an error level security event if 'error' level logging is enabled and
      * also record the stack trace associated with the event.
      *
      * @param int    $type      the type of event - an Logger Type constant.
-     * @param bool   $success   boolean true indicates this was a successful event, 
-     *                          false indicates this was a failed event (the typical
+     * @param bool   $success   TRUE indicates this was a successful event,
+     *                          FALSE indicates this was a failed event (the typical
      *                          value).
      * @param string $message   the message to log.
-     * @param string $throwable the exception to be logged.
-     * 
+     * @param string $throwable The exception to be logged.
+     *
      * @return does not return a value.
      */
-    function error($type, $success, $message, $throwable = null);
-
+    public function error($type, $success, $message, $throwable = null);
 
     /**
      * Allows the caller to determine if messages logged at this level will be
      * discarded, to avoid performing expensive processing.
      *
-     * @return bool true if error level messages will be output to the log.
+     * @return bool TRUE if error level messages will be output to the log.
      */
-    function isErrorEnabled();
-
+    public function isErrorEnabled();
 
     /**
      * Log a warning level security event if 'warning' level logging is enabled and
      * also record the stack trace associated with the event.
      *
      * @param int    $type      the type of event - an Logger Type constant.
-     * @param bool   $success   boolean true indicates this was a successful event,
-     *                          false indicates this was a failed event (the typical
+     * @param bool   $success   TRUE indicates this was a successful event,
+     *                          FALSE indicates this was a failed event (the typical
      *                          value).
      * @param string $message   the message to log.
-     * @param string $throwable the exception to be logged.
-     * 
+     * @param string $throwable The exception to be logged.
+     *
      * @return does not return a value.
      */
-    function warning($type, $success, $message, $throwable = null);
-
+    public function warning($type, $success, $message, $throwable = null);
 
     /**
      * Allows the caller to determine if messages logged at this level will be
      * discarded, to avoid performing expensive processing.
      *
-     * @return bool true if warning level messages will be output to the log.
+     * @return bool TRUE if warning level messages will be output to the log.
      */
-    function isWarningEnabled();
-
+    public function isWarningEnabled();
 
     /**
      * Log an info level security event if 'info' level logging is enabled and
      * also record the stack trace associated with the event.
      *
      * @param int    $type      the type of event - an Logger Type constant.
-     * @param bool   $success   boolean true indicates this was a successful event,
-     *                          false indicates this was a failed event (the 
+     * @param bool   $success   TRUE indicates this was a successful event,
+     *                          FALSE indicates this was a failed event (the
      *                          typical value).
      * @param string $message   the message to log.
-     * @param string $throwable the exception to be logged.
-     * 
+     * @param string $throwable The exception to be logged.
+     *
      * @return does not return a value
      */
-    function info($type, $success, $message, $throwable = null);
-
+    public function info($type, $success, $message, $throwable = null);
 
     /**
      * Allows the caller to determine if messages logged at this level will be
      * discarded, to avoid performing expensive processing.
      *
-     * @return bool true if info level messages will be output to the log.
+     * @return bool TRUE if info level messages will be output to the log.
      */
-    function isInfoEnabled();
-
+    public function isInfoEnabled();
 
     /**
      * Log a debug level security event if 'debug' level logging is enabled and
      * also record the stack trace associated with the event.
      *
      * @param int    $type      the type of event - an Logger Type constant.
-     * @param bool   $success   boolean true indicates this was a successful event,
-     *                          false indicates this was a failed event (the 
+     * @param bool   $success   TRUE indicates this was a successful event,
+     *                          FALSE indicates this was a failed event (the
      *                          typical value).
      * @param string $message   the message to log.
-     * @param string $throwable the exception to be logged.
-     * 
+     * @param string $throwable The exception to be logged.
+     *
      * @return does not return a value
      */
-    function debug($type, $success, $message, $throwable = null);
-
+    public function debug($type, $success, $message, $throwable = null);
 
     /**
      * Allows the caller to determine if messages logged at this level will be
      * discarded, to avoid performing expensive processing.
      *
-     * @return bool true if debug level messages will be output to the log.
+     * @return bool TRUE if debug level messages will be output to the log.
      */
-    function isDebugEnabled();
-
+    public function isDebugEnabled();
 
     /**
      * Log a trace level security event if 'trace' level logging is enabled and
      * also record the stack trace associated with the event.
      *
      * @param int    $type      the type of event - an Logger Type constant.
-     * @param bool   $success   boolean true indicates this was a successful event, 
-     *                          false indicates this was a failed event (the typical
+     * @param bool   $success   TRUE indicates this was a successful event,
+     *                          FALSE indicates this was a failed event (the typical
      *                          value).
      * @param string $message   the message to log.
-     * @param string $throwable the exception to be logged.
-     * 
+     * @param string $throwable The exception to be logged.
+     *
      * @return does not return a value.
      */
-    function trace($type, $success, $message, $throwable = null);
-
+    public function trace($type, $success, $message, $throwable = null);
 
     /**
      * Allows the caller to determine if messages logged at this level will be
      * discarded, to avoid performing expensive processing.
      *
-     * @return bool true if trace level messages will be output to the log.
+     * @return bool TRUE if trace level messages will be output to the log.
      */
-    function isTraceEnabled();
-
+    public function isTraceEnabled();
 }

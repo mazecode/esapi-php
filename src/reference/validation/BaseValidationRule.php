@@ -1,10 +1,10 @@
 <?php
 /**
- * OWASP Enterprise Security API (ESAPI)
+ * OWASP Enterprise Security API (ESAPI).
  *
  * This file is part of the Open Web Application Security Project (OWASP)
  * Enterprise Security API (ESAPI) project.
- * 
+ *
  * PHP version 5.2
  *
  * LICENSE: This source file is subject to the New BSD license.  You should read
@@ -12,42 +12,43 @@
  * software.
  *
  * @category  OWASP
+ *
  * @package   ESAPI_Reference_Validation
+ *
  * @author    Johannes B. Ullrich <jullrich@sans.edu>
  * @author    jah <jah@jahboite.co.uk>
  * @author    Mike Boberski <boberski_michael@bah.com>
  * @copyright 2009-2010 The OWASP Foundation
  * @license   http://www.opensource.org/licenses/bsd-license.php New BSD license
+ *
  * @version   SVN: $Id$
+ *
  * @link      http://www.owasp.org/index.php/ESAPI
  */
-
-/**
- * BaseValidationRule requires the ValidationRule Interface and DefaultEncoder
- * for canonicalization.
- */
-require_once dirname(__FILE__) . '/../../ValidationRule.php';
-require_once dirname(__FILE__) . '/../DefaultEncoder.php';
 
 /**
  * Reference Implementation of the ValidationRule interface.
  *
  * @category  OWASP
+ *
  * @package   ESAPI_Reference_Validation
+ *
  * @author    Johannes B. Ullrich <jullrich@sans.edu>
  * @author    jah <jah@jahboite.co.uk>
  * @author    Mike Boberski <boberski_michael@bah.com>
  * @copyright 2009-2010 The OWASP Foundation
  * @license   http://www.opensource.org/licenses/bsd-license.php New BSD license
+ *
  * @version   Release: @package_version@
+ *
  * @link      http://www.owasp.org/index.php/ESAPI
  */
 abstract class BaseValidationRule implements ValidationRule
 {
-    protected $typeName  = null;
-    protected $encoder   = null;
-    protected $allowNull = false;
 
+    protected $typeName;
+    protected $encoder;
+    protected $allowNull = false;
 
     /**
      * Stores an instance of an Encoder implementation (e.g. DefaultEncoder) to
@@ -56,12 +57,11 @@ abstract class BaseValidationRule implements ValidationRule
      *
      * @param string  $typeName type name of the input to be validated.
      * @param Encoder $encoder  instance of an Encoder implementation.
-     * 
+     *
      * @return does not return a value.
      */
     protected function __construct($typeName, $encoder)
     {
-        global $ESAPI;
         if ($encoder instanceof Encoder) {
             $this->encoder = $encoder;
         } else {
@@ -70,13 +70,12 @@ abstract class BaseValidationRule implements ValidationRule
         $this->typeName = $typeName;
     }
 
-
     /**
-     * Sets the boolean allowNull property which, if set true, will allow empty
-     * inputs to validate as true.
+     * Sets the allowNull property which, if set TRUE, will allow empty
+     * inputs to validate as TRUE.
      *
-     * @param bool $flag set to true if empty inputs should validate as true.
-     * 
+     * @param bool $flag Set to TRUE if empty inputs should validate as TRUE.
+     *
      * @return does not return a value.
      */
     public function setAllowNull($flag)
@@ -88,12 +87,11 @@ abstract class BaseValidationRule implements ValidationRule
         }
     }
 
-
     /**
-     * Gets the boolean allowNull property which, if set true, will allow empty
-     * inputs to validate as true.
+     * Gets the allowNull property which, if set TRUE, will allow empty
+     * inputs to validate as TRUE.
      *
-     * @return bool returns true if empty inputs should validate as true, false
+     * @return bool returns TRUE if empty inputs should validate as TRUE, FALSE
      *              otherwise.
      */
     public function getAllowNull()
@@ -101,13 +99,12 @@ abstract class BaseValidationRule implements ValidationRule
         return $this->allowNull;
     }
 
-
     /**
      * Sets a descriptive name for the validator e.g. CreditCardNumber.
      * If $typeName is empty or not a string then a default value will be set.
      *
-     * @param string $typeName name describing the validator.
-     * 
+     * @param string $typeName Name describing the validator.
+     *
      * @return does not return a value.
      */
     public function setTypeName($typeName)
@@ -117,7 +114,6 @@ abstract class BaseValidationRule implements ValidationRule
         }
         $this->typeName = $typeName;
     }
-
 
     /**
      * Gets the descriptive name for the validator.
@@ -129,21 +125,21 @@ abstract class BaseValidationRule implements ValidationRule
         return $this->typeName;
     }
 
-
     /**
      * Sets an instance of an encoder class which should provide a
      * canonicalize method.
      * TODO should ensure that a canonicalize method is available or should
      * only allow instances of Encoder implementations...
      *
-     * @param Encoder $encoder object which provides a canonicalize method.
-     * 
-     * @return does not return a value.
+     * @param Encoder $encoder Object which provides a canonicalize method.
+     *
      * @throws InvalidArgumentException if encoder is missing a canonicalize method
+     *
+     * @return does not return a value.
      */
     final public function setEncoder($encoder)
     {
-        if (   ! is_object($encoder)
+        if (! is_object($encoder)
             || ! method_exists($encoder, 'canonicalize')
         ) {
             throw new InvalidArgumentException(
@@ -153,18 +149,17 @@ abstract class BaseValidationRule implements ValidationRule
         $this->encoder = $encoder;
     }
 
-
     /**
      * Asserts that the supplied $input is valid after canonicalization. Invalid
      * Inputs will cause a descriptive ValidationException to be thrown. Inputs
      * that are obviously an attack will cause an IntrusionException.
      *
      * @param string $context A descriptive name of the parameter that you are
-     *                        validating (e.g., LoginPage_UsernameField). This 
-     *                        value is used by any logging or error handling that 
+     *                        validating (e.g., LoginPage_UsernameField). This
+     *                        value is used by any logging or error handling that
      *                        is done with respect to the value passed in.
      * @param string $input   The actual user input data to validate.
-     * 
+     *
      * @return does not return a value.
      */
     public function assertValid($context, $input)
@@ -172,67 +167,60 @@ abstract class BaseValidationRule implements ValidationRule
         $this->getValid($context, $input);
     }
 
-
     /**
      * Attempts to return valid canonicalized input.  If a ValidationException
      * is thrown, this method will return sanitized input which may or may not
      * have any similarity to the original input.
      *
      * @param string $context A descriptive name of the parameter that you are
-     *                        validating (e.g., LoginPage_UsernameField). This 
-     *                        value is used by any logging or error handling that 
+     *                        validating (e.g., LoginPage_UsernameField). This
+     *                        value is used by any logging or error handling that
      *                        is done with respect to the value passed in.
      * @param string $input   The actual user input data to validate.
      *
-     * @return string valid, canonicalized input or sanitized input or a default 
+     * @return string valid, canonicalized input or sanitized input or a default
      *                value.
      */
     public function getSafe($context, $input)
     {
         $safe = null;
-        try
-        {
+        try {
             $safe = $this->getValid($context, $input);
-        }
-        catch (ValidationException$e )
-        {
+        } catch (ValidationException$e) {
             $safe = $this->sanitize($context, $input);
         }
+
         return $safe;
     }
 
-
     /**
-     * Returns boolean true if the input is valid, false otherwise.
+     * Returns TRUE if the input is valid, FALSE otherwise.
      *
      * @param string $context A descriptive name of the parameter that you are
-     *                        validating (e.g., LoginPage_UsernameField). This 
-     *                        value is used by any logging or error handling that 
+     *                        validating (e.g., LoginPage_UsernameField). This
+     *                        value is used by any logging or error handling that
      *                        is done with respect to the value passed in.
      * @param string $input   The actual user input data to validate.
      *
-     * @return bool true if the input is valid, false otherwise.
+     * @return bool TRUE if the input is valid, FALSE otherwise.
      */
     public function isValid($context, $input)
     {
-        try
-        {
+        try {
             $this->getValid($context, $input);
+
             return true;
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             return false;
         }
     }
-
 
     /**
      * Returns the supplied input string after removing any characters not
      * present in the supplied whitelist.
      *
      * @param string $input     string input to be filtered.
-     * @param string $whitelist array or string of whitelist characters.
+     * @param string $whitelist Array or string of whitelist characters.
      *
      * @return string returns characters from $input that are present in $whitelist.
      */
@@ -271,5 +259,4 @@ abstract class BaseValidationRule implements ValidationRule
 
         return $filtered;
     }
-
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * OWASP Enterprise Security API (ESAPI)
+ * OWASP Enterprise Security API (ESAPI).
  *
  * This file is part of the Open Web Application Security Project (OWASP)
  * Enterprise Security API (ESAPI) project.
@@ -10,29 +10,16 @@
  * software.
  *
  * @category  OWASP
+ *
  * @package   ESAPI_Reference
+ *
  * @author    jah <jah@jahboite.co.uk>
  * @author    Mike Boberski <boberski_michael@bah.com>
  * @copyright 2009-2010 The OWASP Foundation
  * @license   http://www.opensource.org/licenses/bsd-license.php New BSD license
+ *
  * @link      http://www.owasp.org/index.php/ESAPI
  */
-
-
-/**
- * DefaultSanitizer requires the Sanitizer Interface and the various
- * ValidationRule implementations.
- */
-require_once dirname ( __FILE__ ) . '/../Sanitizer.php';
-require_once dirname ( __FILE__ ) . '/validation/StringValidationRule.php';
-require_once dirname ( __FILE__ ) . '/validation/CreditCardValidationRule.php';
-require_once dirname ( __FILE__ ) . '/validation/HTMLValidationRule.php';
-require_once dirname ( __FILE__ ) . '/validation/NumberValidationRule.php';
-require_once dirname ( __FILE__ ) . '/validation/IntegerValidationRule.php';
-require_once dirname ( __FILE__ ) . '/validation/DateValidationRule.php';
-require_once dirname ( __FILE__ ) . '/validation/EmailAddressValidationRule.php';
-require_once dirname ( __FILE__ ) . '/validation/URLValidationRule.php';
-require_once dirname ( __FILE__ ) . '/validation/WordValidationRule.php';
 
 /**
  * Reference Implementation of the Sanitizer Interface.
@@ -40,24 +27,26 @@ require_once dirname ( __FILE__ ) . '/validation/WordValidationRule.php';
  * PHP version 5.2
  *
  * @category  OWASP
+ *
  * @package   ESAPI_Reference
+ *
  * @version   1.0
+ *
  * @author    jah <jah@jahboite.co.uk>
  * @copyright 2009-2010 The OWASP Foundation
  * @license   http://www.opensource.org/licenses/bsd-license.php New BSD license
+ *
  * @link      http://www.owasp.org/index.php/ESAPI
  */
 class DefaultSanitizer implements Sanitizer
 {
 
-    private $encoder = null;
+    private $encoder;
 
     public function __construct()
     {
-        global $ESAPI;
         $this->encoder = ESAPI::getEncoder();
     }
-
 
     /**
      * Returns valid, "safe" HTML.
@@ -72,7 +61,7 @@ class DefaultSanitizer implements Sanitizer
      *
      * @return valid, "safe" HTML.
      */
-    function getSanitizedHTML($context, $input)
+    public function getSanitizedHTML($context, $input)
     {
         $hvr = new HTMLValidationRule('HTML_Validator', $this->encoder);
 
@@ -92,7 +81,7 @@ class DefaultSanitizer implements Sanitizer
      *
      * @return valid, "safe" email address.
      */
-    function getSanitizedEmailAddress($context, $input)
+    public function getSanitizedEmailAddress($context, $input)
     {
         $evr = new EmailAddressValidationRule('EmailAddress_Validator', $this->encoder);
 
@@ -112,15 +101,16 @@ class DefaultSanitizer implements Sanitizer
      *
      * @return valid, "safe" URL.
      */
-    function getSanitizedURL($context, $input)
+    public function getSanitizedURL($context, $input)
     {
         $uvr = new URLValidationRule('URL_Validator', $this->encoder);
 
         return $uvr->sanitize($context, $input);
     }
+    
     /**
      * Returns valid, "safe" English language word based on the provided guess.
-     * 
+     *
      * @param  $context A descriptive name of the parameter that you are
      *         validating (e.g. ProfilePage_Sig). This value is used by any
      *         logging or error handling that is done with respect to the value
@@ -129,7 +119,7 @@ class DefaultSanitizer implements Sanitizer
      *
      * @return valid, "safe" word.
      */
-    function getSanitizedWord($context, $input)
+    public function getSanitizedWord($context, $input)
     {
         $wvr = new WordValidationRule('Word_Validator', $this->encoder);
         

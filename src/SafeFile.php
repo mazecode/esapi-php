@@ -1,6 +1,6 @@
 <?php
 /**
- * OWASP Enterprise Security API (ESAPI)
+ * OWASP Enterprise Security API (ESAPI).
  *
  * This file is part of the Open Web Application Security Project (OWASP)
  * Enterprise Security API (ESAPI) project.
@@ -12,42 +12,43 @@
  * software.
  *
  * @category  OWASP
+ *
  * @package   ESAPI
+ *
  * @author    Andrew van der Stock <vanderaj@owasp.org>
  * @author    Martin Reiche <martin.reiche.ka@googlemail.com>
  * @author    Arnaud Labenne <arnaud.labenne@dotsafe.fr>
  * @author    Mike Boberski <boberski_michael@bah.com>
  * @copyright 2009-2010 The OWASP Foundation
  * @license   http://www.opensource.org/licenses/bsd-license.php New BSD license
+ *
  * @version   SVN: $Id$
+ *
  * @link      http://www.owasp.org/index.php/ESAPI
  */
 
-
 /**
- * SafeFile requires ValidationException and EnterpriseSecurityException.
- */
-require_once dirname(__FILE__).'/errors/ValidationException.php';
-
-
-/**
- * Use this ESAPI security control to read files from the operating 
+ * Use this ESAPI security control to read files from the operating
  * system.
- * 
- * The idea behind this interface is to extend the PHP SplFileObject 
- * to prevent against null byte injections and other unforeseen problems 
- * resulting from unprintable characters causing problems in path 
+ *
+ * The idea behind this interface is to extend the PHP SplFileObject
+ * to prevent against NULL byte injections and other unforeseen problems
+ * resulting from unprintable characters causing problems in path
  * lookups. This does NOT prevent against directory traversal attacks.
  *
  * @category  OWASP
+ *
  * @package   ESAPI
+ *
  * @author    Andrew van der Stock <vanderaj@owasp.org>
  * @author    Martin Reiche <martin.reiche.ka@googlemail.com>
  * @author    Arnaud Labenne <arnaud.labenne@dotsafe.fr>
  * @author    Mike Boberski <boberski_michael@bah.com>
  * @copyright 2009-2010 The OWASP Foundation
  * @license   http://www.opensource.org/licenses/bsd-license.php New BSD license
+ *
  * @version   Release: @package_version@
+ *
  * @link      http://www.owasp.org/index.php/ESAPI
  */
 class SafeFile extends SplFileObject
@@ -59,18 +60,18 @@ class SafeFile extends SplFileObject
 
     /**
      * Creates an extended SplFileObject from the given filename, which
-     * prevents against null byte injections and unprintable characters.
+     * prevents against NULL byte injections and unprintable characters.
      *
-     * @param string $path the path to the file (path && file name)
+     * @param string $path The path to the file (path && file name)
      *
      * @return does not return a value.
      */
-    function __construct($path)
+    public function __construct($path)
     {
         try {
             @parent::__construct($path);
         } catch (Exception $e) {
-                throw new EnterpriseSecurityException(
+            throw new EnterpriseSecurityException(
                     'Failed to open stream',
                     'Failed to open stream ' . $e->getMessage()
                 );
@@ -82,9 +83,9 @@ class SafeFile extends SplFileObject
     }
 
     /**
-     * Checks the directory against null bytes and unprintable characters.
+     * Checks the directory against NULL bytes and unprintable characters.
      *
-     * @param string $path the path to the file (path && file name)
+     * @param string $path The path to the file (path && file name)
      *
      * @return does not return a value
      * @exception ValidationException thrown if check fails
@@ -93,14 +94,14 @@ class SafeFile extends SplFileObject
     {
         $dir = $this->getPath();
         
-        if ( preg_match($this->_DIR_BLACKLIST_PAT, $dir) ) {
+        if (preg_match($this->_DIR_BLACKLIST_PAT, $dir)) {
             throw new ValidationException(
                 'Invalid directory',
                 "Directory path ({$dir}) contains illegal character. "
             );
         }
 
-        if ( preg_match($this->_PERCENTS_PAT, $dir) ) {
+        if (preg_match($this->_PERCENTS_PAT, $dir)) {
             throw new ValidationException(
                 'Invalid directory',
                 "Directory path ({$dir}) contains encoded characters. "
@@ -117,9 +118,9 @@ class SafeFile extends SplFileObject
     }
 
     /**
-     * Checks the file name against null bytes and unprintable characters.
+     * Checks the file name against NULL bytes and unprintable characters.
      *
-     * @param string $path the file name
+     * @param string $path The file name
      *
      * @return does not return a value
      * @exception ValidationException thrown if check fails
@@ -153,21 +154,21 @@ class SafeFile extends SplFileObject
                     );
                 }
 
-                // Assume file name is $filename with $dir+slash knocked off it.
+                // Assume file name is $filename with $dir + slash knocked off it.
                 $dirLen += 1;
                 $filename
-                    = mb_substr($filename, $dirLen, $fileLen-$dirLen, $charEncF);
+                    = mb_substr($filename, $dirLen, $fileLen - $dirLen, $charEncF);
             }
-
         }
 
-        if ( preg_match($this->_FILE_BLACKLIST_PAT, $filename) ) {
+        if (preg_match($this->_FILE_BLACKLIST_PAT, $filename)) {
             throw new ValidationException(
                 'Invalid file',
-                "File path ({$filename}) contains illegal character.");
+                "File path ({$filename}) contains illegal character."
+            );
         }
 
-        if ( preg_match($this->_PERCENTS_PAT, $filename) ) {
+        if (preg_match($this->_PERCENTS_PAT, $filename)) {
             throw new ValidationException(
                 'Invalid file',
                 "File path ({$filename}) contains encoded characters."
@@ -187,7 +188,7 @@ class SafeFile extends SplFileObject
      * Checks the specified string for unprintable characters (ASCII range
      * from 0 to 31 and from 127 to 255).
      *
-     * @param string $s the string to check for unprintable characters
+     * @param string $s The string to check for unprintable characters
      *
      * @return int the value of the first unprintable character found, or -1
      */
@@ -199,13 +200,14 @@ class SafeFile extends SplFileObject
                 return $ch;
             }
         }
+
         return -1;
     }
 
     /**
-     * Checks if the last character is a slash
+     * Checks if the last character is a slash.
      *
-     * @param string $path the string to check
+     * @param string $path The string to check
      *
      * @return does not return a value
      * @exception ValidationException thrown if check fails

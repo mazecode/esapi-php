@@ -1,10 +1,10 @@
 <?php
 /**
- * OWASP Enterprise Security API (ESAPI)
+ * OWASP Enterprise Security API (ESAPI).
  *
  * This file is part of the Open Web Application Security Project (OWASP)
  * Enterprise Security API (ESAPI) project.
- * 
+ *
  * PHP version 5.2
  *
  * LICENSE: This source file is subject to the New BSD license.  You should read
@@ -12,28 +12,36 @@
  * software.
  *
  * @category  OWASP
+ *
  * @package   ESAPI
+ *
  * @author    Laura Bell <laura.d.bell@gmail.com>
  * @author    Mike Boberski <boberski_michael@bah.com>
  * @copyright 2009-2010 The OWASP Foundation
  * @license   http://www.opensource.org/licenses/bsd-license.php New BSD license
+ *
  * @version   SVN: $Id$
+ *
  * @link      http://www.owasp.org/index.php/ESAPI
  */
 
 /**
  * Use this ESAPI security control to swap audit libraries in and out.
- * 
- * The idea behind this interface is to allow substitution of various 
+ *
+ * The idea behind this interface is to allow substitution of various
  * logging packages, while providing a common interface to access them.
  *
  * @category  OWASP
+ *
  * @package   ESAPI
+ *
  * @author    Laura Bell <laura.d.bell@gmail.com>
  * @author    Mike Boberski <boberski_michael@bah.com>
  * @copyright 2009-2010 The OWASP Foundation
  * @license   http://www.opensource.org/licenses/bsd-license.php New BSD license
+ *
  * @version   Release: @package_version@
+ *
  * @link      http://www.owasp.org/index.php/ESAPI
  */
 interface AuditorFactory
@@ -50,6 +58,5 @@ interface AuditorFactory
      *
      * @return ESAPILogger The DefaultLogger associated with this module.
      */
-    function getLogger($moduleName);
-
+    public function getLogger($moduleName);
 }

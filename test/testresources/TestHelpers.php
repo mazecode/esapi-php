@@ -22,7 +22,6 @@
  * @link      http://www.owasp.org/index.php/ESAPI
  */
 
-
 /**
  * Helper method which opens a file handle to the supplied path, reads it
  * line-by-line and performs preg_match on the line with the supplied regex. You can
@@ -71,6 +70,7 @@ function fileContainsExpected(
                     $dateString = $d->format($format);
                     if (strncmp($line, $dateString, strlen($dateString)) === 0) {
                         fclose($f);
+
                         return true;
                     }
                     $d->modify('+1 second');
@@ -79,14 +79,15 @@ function fileContainsExpected(
                 $d = null;
             } else {
                 fclose($f);
+
                 return true;
             }
         }
     }
     fclose($f);
+
     return false;
 }
-
 
 /**
  * Helper returns the ESAPILogger log file absolute path.
@@ -97,9 +98,9 @@ function fileContainsExpected(
 function getLogFileLoc()
 {
     $filename = ESAPI::getSecurityConfiguration()->getLogFileName();
+
     return realpath($filename);
 }
-
 
 /**
  * Helper method returns a random string of alphanumeric characters of the
@@ -115,6 +116,7 @@ function getRandomAlphaNumString($len)
         return null;
     }
     ESAPI::getEncoder();
+
     return ESAPI::getRandomizer()->getRandomString(
         $len,
         Encoder::CHAR_ALPHANUMERICS
