@@ -1,6 +1,6 @@
 {
 	"name": "mazecode/esapi-php",
-	"description": "Dump and die function as Laravel dd()",
+	"description": "Enterprise Security API for PHP",
 	"type": "wordpress-plugin",
 	"authors": [{
 		"name": "Diego Feliú",
@@ -9,7 +9,7 @@
 	}],
 	"version": "1.0.0",
 	"keywords": [
-		"ESAPI", "XSS", "Cross Site Scripting", "Security"
+		"ESAPI", "XSS", "Cross Site Scripting", "Enterprise Security API", "Security"
 	],
 	"license": "GPL-2.0-or-later",
 	"autoload": {
