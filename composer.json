@@ -12,6 +12,10 @@
 		"ESAPI", "XSS", "Cross Site Scripting", "Enterprise Security API", "Security"
 	],
 	"license": "GPL-2.0-or-later",
+	"repositories": [{
+		"type": "github",
+		"url": "https://github.com/mazecode/esapi-php.git"
+	}],
 	"autoload": {
 		"psr-4": {
 			"MazeCode\\": "src/"
